@@ -17,7 +17,7 @@ apply plugin: 'java'
 
 group 'me.shedaniel'
 version '2.1.4'
-archivesBaseName = 'csb'
+archivesBaseName = 'CustomSelectionBox'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     implementation 'com.github.Chocohead:Rift:f76cf44d887d290782590c99770876393c924333:dev'
-    compile group: 'org.json', name: 'json', version: '20180813'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
 
 mixin {
@@ -45,12 +45,4 @@ minecraft {
     mappings = 'snapshot_20181130'
     runDir = 'run'
     tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'
-}
-
-apply plugin: 'eclipse'
-
-task fatJar(type: Jar) {
-    baseName = project.name
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
 }
