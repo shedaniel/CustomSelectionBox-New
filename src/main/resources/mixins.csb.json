@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.7.7",
+  "compatibilityLevel": "JAVA_8",
+  "target": "@env(DEFAULT)",
+  "package": "me.shedaniel.mixin",
+  "refmap": "mixins.csb.refmap.json",
+  "mixins": [
+    "MixinRenderGlobal",
+    "MixinGuiOptions"
+  ]
+}

@@ -1,0 +1,56 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://www.jitpack.io' }
+        maven { url 'http://repo.spongepowered.org/maven' }
+        maven { url 'http://files.minecraftforge.net/maven' }
+    }
+    dependencies {
+        classpath 'com.github.Chocohead:ForgeGradle:moderniser-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.tweaker-client'
+apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'java'
+
+group 'me.shedaniel'
+version '2.1.4'
+archivesBaseName = 'csb'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://www.dimdev.org/maven/' }
+    maven { url 'https://repo.spongepowered.org/maven/' }
+    maven { url 'https://www.jitpack.io' }
+    maven { url "http://repo.strezz.org/artifactory/list/Strezz-Central" }
+}
+
+dependencies {
+    implementation 'com.github.Chocohead:Rift:f76cf44d887d290782590c99770876393c924333:dev'
+    compile group: 'org.json', name: 'json', version: '20180813'
+}
+
+mixin {
+    defaultObfuscationEnv notch
+    add sourceSets.main, 'mixins.csb.refmap.json'
+}
+
+minecraft {
+    version = '1.13.2'
+    mappings = 'snapshot_20181130'
+    runDir = 'run'
+    tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'
+}
+
+apply plugin: 'eclipse'
+
+task fatJar(type: Jar) {
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
