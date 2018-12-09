@@ -4,7 +4,6 @@ import me.shedaniel.utils.ConfigCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 
@@ -55,7 +54,7 @@ public class CSBSettingsGUI extends GuiScreen {
 				try {
 					saveConfig();
 					configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow);
-				} catch (FileNotFoundException | JSONException e) {
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 				Minecraft.getInstance().displayGuiScreen((GuiScreen) null);
@@ -68,7 +67,7 @@ public class CSBSettingsGUI extends GuiScreen {
 					reset(false);
 					saveConfig();
 					configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow);
-				} catch (FileNotFoundException | JSONException e) {
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 				openSettingsGUI();
@@ -81,7 +80,7 @@ public class CSBSettingsGUI extends GuiScreen {
 					reset(true);
 					saveConfig();
 					configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow);
-				} catch (FileNotFoundException | JSONException e) {
+				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 				openSettingsGUI();

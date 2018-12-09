@@ -1,15 +1,15 @@
 package me.shedaniel;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonWriter;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.commons.io.FileUtils;
 import org.dimdev.riftloader.listener.InitializationListener;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 
 public class CSBConfig implements InitializationListener {
 	
@@ -42,46 +42,60 @@ public class CSBConfig implements InitializationListener {
 	
 	public static File configFile = new File(Launch.minecraftHome, "config" + File.separator + "CSB" + File.separator + "config.json");
 	
-	public static void loadConfig() throws IOException, JSONException {
+	public static void loadConfig() throws IOException {
 		configFile.getParentFile().mkdirs();
 		String content = configFile.exists() ? FileUtils.readFileToString(configFile, "utf-8") : "{}";
-		JSONObject jsonObject = new JSONObject(content);
-		red = jsonObject.has("colourRed") ? jsonObject.getInt("colourRed") / 255.0F : 0F;
-		green = jsonObject.has("colourGreen") ? jsonObject.getInt("colourGreen") / 255.0F : 0F;
-		blue = jsonObject.has("colourBlue") ? jsonObject.getInt("colourBlue") / 255.0F : 0F;
-		alpha = jsonObject.has("alpha") ? jsonObject.getInt("alpha") / 255.0F : 1F;
-		thickness = jsonObject.has("thickness") ? jsonObject.getInt("thickness") : 4F;
-		blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.getInt("blinkSpeed") / 100.0F : 0.3F;
-		blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.getInt("blinkAlpha") / 255.0F : 100.0F / 255.0F;
-		diffButtonLoc = jsonObject.has("diffButtonLoc") ? jsonObject.getBoolean("diffButtonLoc") : false;
-		disableDepthBuffer = jsonObject.has("disableDepthBuffer") ? jsonObject.getBoolean("disableDepthBuffer") : false;
-		breakAnimation = jsonObject.has("breakAnimation") ? jsonObject.getInt("breakAnimation") : 0;
-		rainbow = jsonObject.has("rainbow") ? jsonObject.getBoolean("rainbow") : false;
+		JsonElement jsonElement = new JsonParser().parse(content);
+		JsonObject jsonObject = jsonElement.getAsJsonObject();
+		red = jsonObject.has("colourRed") ? jsonObject.get("colourRed").getAsInt() / 255.0F : 0F;
+		green = jsonObject.has("colourGreen") ? jsonObject.get("colourGreen").getAsInt() / 255.0F : 0F;
+		blue = jsonObject.has("colourBlue") ? jsonObject.get("colourBlue").getAsInt() / 255.0F : 0F;
+		alpha = jsonObject.has("alpha") ? jsonObject.get("alpha").getAsInt() / 255.0F : 1F;
+		thickness = jsonObject.has("thickness") ? jsonObject.get("thickness").getAsInt() : 4F;
+		blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.get("blinkSpeed").getAsInt() / 100.0F : 0.3F;
+		blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 100.0F / 255.0F;
+		diffButtonLoc = jsonObject.has("diffButtonLoc") ? jsonObject.get("diffButtonLoc").getAsBoolean() : false;
+		disableDepthBuffer = jsonObject.has("disableDepthBuffer") ? jsonObject.get("disableDepthBuffer").getAsBoolean() : false;
+		breakAnimation = jsonObject.has("breakAnimation") ? jsonObject.get("breakAnimation").getAsInt() : 0;
+		rainbow = jsonObject.has("rainbow") ? jsonObject.get("rainbow").getAsBoolean() : false;
 		
 		saveConfig();
 	}
 	
-	public static void saveConfig() throws FileNotFoundException, JSONException {
-		JSONObject object = new JSONObject();
-		object.put("colourRed", (int) (red * 255));
-		object.put("colourGreen", (int) (green * 255));
-		object.put("colourBlue", (int) (blue * 255));
-		object.put("alpha", (int) (alpha * 255));
-		object.put("thickness", (int) thickness);
-		object.put("blinkSpeed", (int) (blinkSpeed * 100));
-		object.put("blinkAlpha", (int) (blinkAlpha * 255));
-		object.put("diffButtonLoc", diffButtonLoc);
-		object.put("disableDepthBuffer", disableDepthBuffer);
-		object.put("breakAnimation", breakAnimation);
-		object.put("rainbow", rainbow);
+	public static void saveConfig() throws FileNotFoundException {
+		JsonObject object = new JsonObject();
+		object.addProperty("colourRed", (int) (red * 255));
+		object.addProperty("colourGreen", (int) (green * 255));
+		object.addProperty("colourBlue", (int) (blue * 255));
+		object.addProperty("alpha", (int) (alpha * 255));
+		object.addProperty("thickness", (int) thickness);
+		object.addProperty("blinkSpeed", (int) (blinkSpeed * 100));
+		object.addProperty("blinkAlpha", (int) (blinkAlpha * 255));
+		object.addProperty("diffButtonLoc", diffButtonLoc);
+		object.addProperty("disableDepthBuffer", disableDepthBuffer);
+		object.addProperty("breakAnimation", breakAnimation);
+		object.addProperty("rainbow", rainbow);
 		if (configFile.exists())
 			configFile.delete();
 		PrintWriter writer = new PrintWriter(configFile);
-		writer.print(object.toString(4));
+		writer.print(objectToString(object));
 		writer.close();
 	}
 	
-	public static void reset(boolean mc) throws FileNotFoundException, JSONException {
+	private static String objectToString(JsonObject object) {
+		try {
+			StringWriter stringWriter = new StringWriter();
+			JsonWriter jsonWriter = new JsonWriter(stringWriter);
+			jsonWriter.setLenient(true);
+			jsonWriter.setIndent("\t");
+			Streams.write(object, jsonWriter);
+			return stringWriter.toString();
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+	}
+	
+	public static void reset(boolean mc) throws FileNotFoundException {
 		setRed(0.0F);
 		setGreen(0.0F);
 		setBlue(0.0F);
