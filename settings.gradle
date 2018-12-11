@@ -1,2 +1,10 @@
-rootProject.name = 'CustomSelectionBox'
-
+pluginManagement {
+    repositories {
+        jcenter()
+        maven {
+            name = 'Fabric'
+            url = 'http://maven.fabricmc.net/'
+        }
+        gradlePluginPortal()
+    }
+}

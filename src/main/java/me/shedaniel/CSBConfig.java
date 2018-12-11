@@ -5,16 +5,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
+import net.fabricmc.api.ModInitializer;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.commons.io.FileUtils;
-import org.dimdev.riftloader.listener.InitializationListener;
 
 import java.io.*;
 
-public class CSBConfig implements InitializationListener {
+public class CSBConfig implements ModInitializer {
 	
 	@Override
-	public void onInitialization() {
+	public void onInitialize() {
 		try {
 			loadConfig();
 		} catch (IOException e) {

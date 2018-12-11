@@ -1,48 +1,23 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://www.jitpack.io' }
-        maven { url 'http://repo.spongepowered.org/maven' }
-        maven { url 'http://files.minecraftforge.net/maven' }
-    }
-    dependencies {
-        classpath 'com.github.Chocohead:ForgeGradle:moderniser-SNAPSHOT'
-        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
-    }
+plugins {
+	id 'fabric-loom' version '0.1.0-SNAPSHOT'
 }
-
-apply plugin: 'net.minecraftforge.gradle.tweaker-client'
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'java'
-
-group 'me.shedaniel'
-version '2.1.4'
-archivesBaseName = 'CustomSelectionBox'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-repositories {
-    mavenCentral()
-    maven { url 'https://www.dimdev.org/maven/' }
-    maven { url 'https://repo.spongepowered.org/maven/' }
-    maven { url 'https://www.jitpack.io' }
-    maven { url "http://repo.strezz.org/artifactory/list/Strezz-Central" }
+archivesBaseName = "CustomSelectionBox"
+version = "2.1.5"
+
+minecraft {
 }
 
 dependencies {
-    implementation 'com.github.Chocohead:Rift:f76cf44d887d290782590c99770876393c924333:dev'
-    implementation 'com.google.code.gson:gson:2.8.5'
-}
+	minecraft "com.mojang:minecraft:18w49a"
+	mappings "net.fabricmc:yarn:18w49a.9"
+	modCompile "net.fabricmc:fabric-loader:0.2.0.62"
 
-mixin {
-    defaultObfuscationEnv notch
-    add sourceSets.main, 'mixins.csb.refmap.json'
-}
+	// Fabric API. This is technically optional, but you probably want it anyway.
+	modCompile "net.fabricmc:fabric:0.1.0.37"
 
-minecraft {
-    version = '1.13.2'
-    mappings = 'snapshot_20181130'
-    runDir = 'run'
-    tweakClass = 'org.dimdev.riftloader.launch.RiftLoaderClientTweaker'
+	compile group: 'org.json', name: 'json', version: '20180813'
 }

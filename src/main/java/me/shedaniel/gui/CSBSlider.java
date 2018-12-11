@@ -1,12 +1,12 @@
 package me.shedaniel.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import org.lwjgl.opengl.GL11;
 
 import static me.shedaniel.CSBConfig.*;
 
-public class CSBSlider extends GuiButton {
+public class CSBSlider extends ButtonWidget {
 	private float sliderValue;
 	public boolean dragging;
 	
@@ -14,16 +14,16 @@ public class CSBSlider extends GuiButton {
 	public CSBSlider(int i, int x, int y, float f) {
 		super(i, x, y, 150, 20, "");
 		this.sliderValue = f;
-		this.displayString = getDisplayString(i);
+		this.text = getDisplayString(i);
 	}
 	
 	@Override
-	public int getHoverState(boolean flag) {
-		return 0;
+	public boolean isHovered() {
+		return false;
 	}
 	
 	@Override
-	protected void renderBg(Minecraft minecraft, int p_mouseDragged_2_, int p_mouseDragged_3_) {
+	protected void drawBackground(MinecraftClient minecraft, int p_mouseDragged_2_, int p_mouseDragged_3_) {
 		if (this.visible) {
 			if (this.dragging) {
 				this.sliderValue = ((float) (p_mouseDragged_2_ - (this.x + 4)) / (float) (this.width - 8));
@@ -36,21 +36,21 @@ public class CSBSlider extends GuiButton {
 				}
 				
 				updateValue(this.id);
-				this.displayString = getDisplayString(this.id);
+				this.text = getDisplayString(this.id);
 			}
 			
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			drawTexturedModalRect(x
+			drawTexturedRect(x
 							+ (int) (sliderValue * (width - 8)),
 					this.y, 0, 66, 4, 20);
-			drawTexturedModalRect(x
+			drawTexturedRect(x
 							+ (int) (sliderValue * (width - 8)) + 4,
 					this.y, 196, 66, 4, 20);
 		}
 	}
 	
 	@Override
-	public void onClick(double p_mousePressed_1_, double p_mousePressed_3_) {
+	public void onPressed(double p_mousePressed_1_, double p_mousePressed_3_) {
 		sliderValue = ((float) (p_mousePressed_1_ - (this.x + 4)) / (float) (width - 8));
 		
 		if (sliderValue < 0.0F) {
@@ -61,7 +61,7 @@ public class CSBSlider extends GuiButton {
 			sliderValue = 1.0F;
 		}
 		
-		this.displayString = getDisplayString(this.id);
+		this.text = getDisplayString(this.id);
 		this.dragging = true;
 	}
 	

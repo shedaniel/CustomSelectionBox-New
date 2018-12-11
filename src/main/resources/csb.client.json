@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "me.shedaniel.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

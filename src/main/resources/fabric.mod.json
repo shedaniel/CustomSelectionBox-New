@@ -1,0 +1,11 @@
+{
+  "id": "csb",
+  "name": "Custom Selection Box Fabric",
+  "version": "2.1.4",
+  "side": "client",
+  "initializer": "me.shedaniel.CSBConfig",
+  "mixins": {
+    "client": "csb.client.json",
+    "common": "csb.common.json"
+  }
+}
