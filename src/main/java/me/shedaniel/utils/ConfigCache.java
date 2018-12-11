@@ -13,16 +13,12 @@ public class ConfigCache {
 	public float blinkSpeed;
 	public boolean diffButtonLoc;
 	public boolean disableDepthBuffer;
-	public int breakAnimation;
+	public CSBConfig.BreakAnimationType breakAnimation;
 	public boolean rainbow;
+	public boolean adjustBoundingBoxByLinkedBlocks;
 	
-	public int NONE = 0;
-	public int SHRINK = 1;
-	public int DOWN = 2;
-	public int ALPHA = 3;
-	public int lastAnimationIndex = 3;
-	
-	public ConfigCache(float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed, boolean diffButtonLoc, boolean disableDepthBuffer, int breakAnimation, boolean rainbow) {
+	public ConfigCache(float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed,
+	                   boolean diffButtonLoc, boolean disableDepthBuffer, CSBConfig.BreakAnimationType breakAnimation, boolean rainbow, boolean adjustBoundingBoxByLinkedBlocks) {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
@@ -34,6 +30,7 @@ public class ConfigCache {
 		this.disableDepthBuffer = disableDepthBuffer;
 		this.breakAnimation = breakAnimation;
 		this.rainbow = rainbow;
+		this.adjustBoundingBoxByLinkedBlocks = adjustBoundingBoxByLinkedBlocks;
 	}
 	
 	public void save() {
@@ -48,6 +45,7 @@ public class ConfigCache {
 		CSBConfig.disableDepthBuffer = disableDepthBuffer;
 		CSBConfig.breakAnimation = breakAnimation;
 		CSBConfig.rainbow = rainbow;
+		CSBConfig.adjustBoundingBoxByLinkedBlocks = adjustBoundingBoxByLinkedBlocks;
 	}
 	
 }

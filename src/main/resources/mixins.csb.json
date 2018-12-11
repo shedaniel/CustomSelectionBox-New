@@ -6,7 +6,7 @@
   "package": "me.shedaniel.mixin",
   "refmap": "mixins.csb.refmap.json",
   "mixins": [
-    "MixinRenderGlobal",
+    "MixinWorldRenderer",
     "MixinGuiOptions"
   ]
 }

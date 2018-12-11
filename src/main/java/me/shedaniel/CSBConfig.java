@@ -31,14 +31,40 @@ public class CSBConfig implements InitializationListener {
 	public static float blinkSpeed;
 	public static boolean diffButtonLoc;
 	public static boolean disableDepthBuffer;
-	public static int breakAnimation;
+	public static boolean adjustBoundingBoxByLinkedBlocks;
+	public static BreakAnimationType breakAnimation;
 	public static boolean rainbow;
 	
-	public static int NONE = 0;
-	public static int SHRINK = 1;
-	public static int DOWN = 2;
-	public static int ALPHA = 3;
-	public static int lastAnimationIndex = 3;
+	public static enum BreakAnimationType {
+		NONE(0, "None"), SHRINK(1, "Shrink"), DOWN(2, "Down"), UP(4, "Up"), ALPHA(3, "Alpha");
+		
+		private int id;
+		private String text;
+		
+		BreakAnimationType(int id, String text) {
+			this.id = id;
+			this.text = text;
+		}
+		
+		public String getText() {
+			return text;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		
+		public static int getLargestAnimationIndex() {
+			return 4;
+		}
+		
+		public static BreakAnimationType getById(int id) {
+			for (BreakAnimationType type : values())
+				if (type.getId() == id)
+					return type;
+			return null;
+		}
+	}
 	
 	public static File configFile = new File(Launch.minecraftHome, "config" + File.separator + "CSB" + File.separator + "config.json");
 	
@@ -56,8 +82,10 @@ public class CSBConfig implements InitializationListener {
 		blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 100.0F / 255.0F;
 		diffButtonLoc = jsonObject.has("diffButtonLoc") ? jsonObject.get("diffButtonLoc").getAsBoolean() : false;
 		disableDepthBuffer = jsonObject.has("disableDepthBuffer") ? jsonObject.get("disableDepthBuffer").getAsBoolean() : false;
-		breakAnimation = jsonObject.has("breakAnimation") ? jsonObject.get("breakAnimation").getAsInt() : 0;
+		breakAnimation = jsonObject.has("breakAnimation") ? BreakAnimationType.getById(jsonObject.get("breakAnimation").getAsInt())
+				: BreakAnimationType.NONE;
 		rainbow = jsonObject.has("rainbow") ? jsonObject.get("rainbow").getAsBoolean() : false;
+		adjustBoundingBoxByLinkedBlocks = jsonObject.has("adjustBoundingBoxByLinkedBlocks") ? jsonObject.get("adjustBoundingBoxByLinkedBlocks").getAsBoolean() : false;
 		
 		saveConfig();
 	}
@@ -73,8 +101,9 @@ public class CSBConfig implements InitializationListener {
 		object.addProperty("blinkAlpha", (int) (blinkAlpha * 255));
 		object.addProperty("diffButtonLoc", diffButtonLoc);
 		object.addProperty("disableDepthBuffer", disableDepthBuffer);
-		object.addProperty("breakAnimation", breakAnimation);
+		object.addProperty("breakAnimation", breakAnimation.getId());
 		object.addProperty("rainbow", rainbow);
+		object.addProperty("adjustBoundingBoxByLinkedBlocks", adjustBoundingBoxByLinkedBlocks);
 		if (configFile.exists())
 			configFile.delete();
 		PrintWriter writer = new PrintWriter(configFile);
@@ -104,9 +133,17 @@ public class CSBConfig implements InitializationListener {
 		setBlinkAlpha(mc ? 0.0F : 0.390625F);
 		setBlinkSpeed(0.2F);
 		disableDepthBuffer = false;
-		setBreakAnimation(0);
+		setBreakAnimation(BreakAnimationType.NONE);
 		setIsRainbow(false);
 		saveConfig();
+	}
+	
+	public static boolean isAdjustBoundingBoxByLinkedBlocks() {
+		return adjustBoundingBoxByLinkedBlocks;
+	}
+	
+	public static void setAdjustBoundingBoxByLinkedBlocks(boolean adjustBoundingBoxByLinkedBlocks) {
+		CSBConfig.adjustBoundingBoxByLinkedBlocks = adjustBoundingBoxByLinkedBlocks;
 	}
 	
 	public static float getRed() {
@@ -165,8 +202,8 @@ public class CSBConfig implements InitializationListener {
 		blinkSpeed = between(s, 0.0F, 1.0F);
 	}
 	
-	public static void setBreakAnimation(int index) {
-		breakAnimation = between(index, 0, lastAnimationIndex);
+	public static void setBreakAnimation(BreakAnimationType type) {
+		breakAnimation = type;
 	}
 	
 	public static void setIsRainbow(boolean b) {

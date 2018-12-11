@@ -32,7 +32,7 @@ public class CSB implements InitializationListener {
 		Tessellator tessellator = Tessellator.getInstance();
 		
 		if (alpha > 0.0F) {
-			if (getBlinkSpeed() > 0 && breakAnimation != ALPHA)
+			if (getBlinkSpeed() > 0 && breakAnimation.equals(BreakAnimationType.ALPHA))
 				alpha *= (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed()));
 			
 			if (usingRainbow()) {
