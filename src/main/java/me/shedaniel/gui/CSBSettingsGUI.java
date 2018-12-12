@@ -1,5 +1,6 @@
 package me.shedaniel.gui;
 
+import me.shedaniel.CSBConfig;
 import me.shedaniel.utils.ConfigCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -21,7 +22,7 @@ public class CSBSettingsGUI extends GuiScreen {
 	
 	@SuppressWarnings("unchecked")
 	public void initGui() {
-		this.configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+		this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
 		this.buttons.clear();
 		// left
 		addButton(new CSBSlider(1, 4, this.height / 2 - 62, getRed()));
@@ -57,12 +58,19 @@ public class CSBSettingsGUI extends GuiScreen {
 		});
 		
 		//below
-		addButton(new GuiButton(20, this.width / 2 - 100, this.height - 48, "Save") {
+		addButton(new GuiButton(20, this.width / 2 - 100, this.height - 48, 95, 20, "Enabled: " + (isEnabled() ? "True" : "False")) {
+			@Override
+			public void onClick(double p_mouseClicked_1_, double p_mouseClicked_3_) {
+				setEnabled(!isEnabled());
+				displayString = "Enabled: " + (isEnabled() ? "True" : "False");
+			}
+		});
+		addButton(new GuiButton(20, this.width / 2 + 5, this.height - 48, 95, 20, "Save") {
 			@Override
 			public void onClick(double p_mouseClicked_1_, double p_mouseClicked_3_) {
 				try {
 					saveConfig();
-					configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+					configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -75,7 +83,7 @@ public class CSBSettingsGUI extends GuiScreen {
 				try {
 					reset(false);
 					saveConfig();
-					configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+					configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -88,7 +96,7 @@ public class CSBSettingsGUI extends GuiScreen {
 				try {
 					reset(true);
 					saveConfig();
-					configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+					configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -111,7 +119,7 @@ public class CSBSettingsGUI extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		configCache.save();
-		this.configCache = new ConfigCache(red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+		this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
 	}
 	
 }

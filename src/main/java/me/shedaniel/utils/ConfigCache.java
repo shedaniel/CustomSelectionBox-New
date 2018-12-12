@@ -4,6 +4,7 @@ import me.shedaniel.CSBConfig;
 
 public class ConfigCache {
 	
+	public boolean enabled;
 	public float red;
 	public float green;
 	public float blue;
@@ -17,8 +18,9 @@ public class ConfigCache {
 	public boolean rainbow;
 	public boolean adjustBoundingBoxByLinkedBlocks;
 	
-	public ConfigCache(float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed,
+	public ConfigCache(boolean enabled, float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed,
 	                   boolean diffButtonLoc, boolean disableDepthBuffer, CSBConfig.BreakAnimationType breakAnimation, boolean rainbow, boolean adjustBoundingBoxByLinkedBlocks) {
+		this.enabled = enabled;
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
@@ -34,6 +36,7 @@ public class ConfigCache {
 	}
 	
 	public void save() {
+		CSBConfig.enabled = enabled;
 		CSBConfig.red = red;
 		CSBConfig.green = green;
 		CSBConfig.blue = blue;

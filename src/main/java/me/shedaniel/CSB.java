@@ -28,11 +28,11 @@ public class CSB implements InitializationListener {
 		Mixins.addConfiguration("mixins.csb.json");
 	}
 	
-	public static void drawBlinkingBlock(AxisAlignedBB par1AxisAlignedBB, float alpha) {
+	public static void drawBlinkingBlock(AxisAlignedBB boundingBox, float alpha) {
 		Tessellator tessellator = Tessellator.getInstance();
 		
 		if (alpha > 0.0F) {
-			if (getBlinkSpeed() > 0 && breakAnimation.equals(BreakAnimationType.ALPHA))
+			if (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA))
 				alpha *= (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed()));
 			
 			if (usingRainbow()) {
@@ -41,12 +41,12 @@ public class CSB implements InitializationListener {
 				GL11.glColor4f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, alpha);
 			} else
 				GL11.glColor4f(getRed(), getGreen(), getBlue(), alpha);
-			renderDown(par1AxisAlignedBB);
-			renderUp(par1AxisAlignedBB);
-			renderNorth(par1AxisAlignedBB);
-			renderSouth(par1AxisAlignedBB);
-			renderWest(par1AxisAlignedBB);
-			renderEast(par1AxisAlignedBB);
+			renderDown(boundingBox);
+			renderUp(boundingBox);
+			renderNorth(boundingBox);
+			renderSouth(boundingBox);
+			renderWest(boundingBox);
+			renderEast(boundingBox);
 		}
 	}
 	

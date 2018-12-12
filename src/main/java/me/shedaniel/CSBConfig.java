@@ -22,6 +22,7 @@ public class CSBConfig implements InitializationListener {
 		}
 	}
 	
+	public static boolean enabled;
 	public static float red;
 	public static float green;
 	public static float blue;
@@ -35,37 +36,6 @@ public class CSBConfig implements InitializationListener {
 	public static BreakAnimationType breakAnimation;
 	public static boolean rainbow;
 	
-	public static enum BreakAnimationType {
-		NONE(0, "None"), SHRINK(1, "Shrink"), DOWN(2, "Down"), UP(4, "Up"), ALPHA(3, "Alpha");
-		
-		private int id;
-		private String text;
-		
-		BreakAnimationType(int id, String text) {
-			this.id = id;
-			this.text = text;
-		}
-		
-		public String getText() {
-			return text;
-		}
-		
-		public int getId() {
-			return id;
-		}
-		
-		public static int getLargestAnimationIndex() {
-			return 4;
-		}
-		
-		public static BreakAnimationType getById(int id) {
-			for (BreakAnimationType type : values())
-				if (type.getId() == id)
-					return type;
-			return null;
-		}
-	}
-	
 	public static File configFile = new File(Launch.minecraftHome, "config" + File.separator + "CSB" + File.separator + "config.json");
 	
 	public static void loadConfig() throws IOException {
@@ -73,6 +43,7 @@ public class CSBConfig implements InitializationListener {
 		String content = configFile.exists() ? FileUtils.readFileToString(configFile, "utf-8") : "{}";
 		JsonElement jsonElement = new JsonParser().parse(content);
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
+		enabled = jsonObject.has("enabled") ? jsonObject.get("enabled").getAsBoolean() : true;
 		red = jsonObject.has("colourRed") ? jsonObject.get("colourRed").getAsInt() / 255.0F : 0F;
 		green = jsonObject.has("colourGreen") ? jsonObject.get("colourGreen").getAsInt() / 255.0F : 0F;
 		blue = jsonObject.has("colourBlue") ? jsonObject.get("colourBlue").getAsInt() / 255.0F : 0F;
@@ -92,6 +63,7 @@ public class CSBConfig implements InitializationListener {
 	
 	public static void saveConfig() throws FileNotFoundException {
 		JsonObject object = new JsonObject();
+		object.addProperty("enabled", enabled);
 		object.addProperty("colourRed", (int) (red * 255));
 		object.addProperty("colourGreen", (int) (green * 255));
 		object.addProperty("colourBlue", (int) (blue * 255));
@@ -125,6 +97,7 @@ public class CSBConfig implements InitializationListener {
 	}
 	
 	public static void reset(boolean mc) throws FileNotFoundException {
+		setEnabled(true);
 		setRed(0.0F);
 		setGreen(0.0F);
 		setBlue(0.0F);
@@ -144,6 +117,10 @@ public class CSBConfig implements InitializationListener {
 	
 	public static void setAdjustBoundingBoxByLinkedBlocks(boolean adjustBoundingBoxByLinkedBlocks) {
 		CSBConfig.adjustBoundingBoxByLinkedBlocks = adjustBoundingBoxByLinkedBlocks;
+	}
+	
+	public static boolean isEnabled() {
+		return enabled;
 	}
 	
 	public static float getRed() {
@@ -172,6 +149,10 @@ public class CSBConfig implements InitializationListener {
 	
 	public static float getBlinkSpeed() {
 		return between(blinkSpeed, 0.0F, 1.0F);
+	}
+	
+	public static void setEnabled(boolean enabled) {
+		CSBConfig.enabled = enabled;
 	}
 	
 	public static void setRed(float r) {
@@ -256,6 +237,37 @@ public class CSBConfig implements InitializationListener {
 		if (i > y)
 			i = y;
 		return i;
+	}
+	
+	public static enum BreakAnimationType {
+		NONE(0, "None"), SHRINK(1, "Shrink"), DOWN(2, "Down"), UP(4, "Up"), ALPHA(3, "Alpha");
+		
+		private int id;
+		private String text;
+		
+		BreakAnimationType(int id, String text) {
+			this.id = id;
+			this.text = text;
+		}
+		
+		public String getText() {
+			return text;
+		}
+		
+		public int getId() {
+			return id;
+		}
+		
+		public static int getLargestAnimationIndex() {
+			return 4;
+		}
+		
+		public static BreakAnimationType getById(int id) {
+			for (BreakAnimationType type : values())
+				if (type.getId() == id)
+					return type;
+			return null;
+		}
 	}
 	
 }

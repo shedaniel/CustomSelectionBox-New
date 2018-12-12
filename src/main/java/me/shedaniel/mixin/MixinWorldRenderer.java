@@ -42,17 +42,24 @@ public abstract class MixinWorldRenderer implements IWorldEventListener, AutoClo
 	@Shadow
 	private WorldClient world;
 	
-	@Inject(method = "drawSelectionBox", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "drawSelectionBox", at = @At(value = "HEAD"), cancellable = true, expect = -1)
 	public void drawSelectionBox(EntityPlayer player, RayTraceResult trace, int execute, float partialTicks, CallbackInfo ci) {
+		if (!enabled)
+			return;
 		ci.cancel();
 		if (execute == 0 && trace.type == RayTraceResult.Type.BLOCK) {
 			BlockPos blockPos = trace.getBlockPos();
 			IBlockState blockState = this.world.getBlockState(blockPos);
 			if (!blockState.isAir() && this.world.getWorldBorder().contains(blockPos)) {
 				float breakProgress = getBreakProgress(damagedBlocks, player, trace);
+				
+				if (disableDepthBuffer) {
+					GL11.glDisable(GL11.GL_DEPTH_TEST);
+				}
+				
 				GlStateManager.enableBlend();
 				GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-				GlStateManager.lineWidth(Math.max(2.5F, (float) mc.mainWindow.getWidth() / 1920.0F * 2.5F));
+				GlStateManager.lineWidth(getThickness());
 				GlStateManager.disableTexture2D();
 				GlStateManager.depthMask(false);
 				GlStateManager.matrixMode(5889);
@@ -75,6 +82,7 @@ public abstract class MixinWorldRenderer implements IWorldEventListener, AutoClo
 				if (breakAnimation.equals(BreakAnimationType.SHRINK))
 					bb = bb.contract(breakProgress, breakProgress, breakProgress)
 							.offset(breakProgress / 2, breakProgress / 2, breakProgress / 2);
+				bb = bb.expand(0.0020000000949949026D, 0.0020000000949949026D, 0.0020000000949949026D);
 				
 				//Draw Fillin
 				drawBlinkingBlock(bb, (breakAnimation.equals(BreakAnimationType.ALPHA)) ? breakProgress : getBlinkAlpha());
@@ -88,13 +96,18 @@ public abstract class MixinWorldRenderer implements IWorldEventListener, AutoClo
 					GL11.glColor4f(getRed(), getGreen(), getBlue(), getAlpha());
 				
 				//Draw Outline
-				drawOutlinedBoundingBox(bb, -1);
+				if (getThickness() > 0)
+					drawOutlinedBoundingBox(bb, -1);
 				
 				GlStateManager.popMatrix();
 				GlStateManager.matrixMode(5888);
 				GlStateManager.depthMask(true);
 				GlStateManager.enableTexture2D();
 				GlStateManager.disableBlend();
+
+				if (disableDepthBuffer) {
+					GL11.glEnable(GL11.GL_DEPTH_TEST);
+				}
 			}
 		}
 	}
