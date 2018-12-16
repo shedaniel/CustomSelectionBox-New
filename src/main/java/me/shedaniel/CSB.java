@@ -186,8 +186,11 @@ public class CSB implements InitializationListener {
 	
 	public static void openSettingsGUI() {
 		Minecraft mc = Minecraft.getInstance();
+		try {
+			mc.currentScreen.close();
+		} catch (Exception e) {
+		}
 		mc.gameSettings.saveOptions();
-		mc.displayGuiScreen((GuiScreen) null);
-		mc.displayGuiScreen(new CSBSettingsGUI(mc.currentScreen));
+		mc.displayGuiScreen(new CSBSettingsGUI(null));
 	}
 }
