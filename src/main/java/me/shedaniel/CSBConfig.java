@@ -35,6 +35,7 @@ public class CSBConfig implements InitializationListener {
 	public static boolean adjustBoundingBoxByLinkedBlocks;
 	public static BreakAnimationType breakAnimation;
 	public static boolean rainbow;
+	public static boolean newBlockRendering;
 	
 	public static File configFile = new File(Launch.minecraftHome, "config" + File.separator + "CSB" + File.separator + "config.json");
 	
@@ -57,6 +58,7 @@ public class CSBConfig implements InitializationListener {
 				: BreakAnimationType.NONE;
 		rainbow = jsonObject.has("rainbow") ? jsonObject.get("rainbow").getAsBoolean() : false;
 		adjustBoundingBoxByLinkedBlocks = jsonObject.has("adjustBoundingBoxByLinkedBlocks") ? jsonObject.get("adjustBoundingBoxByLinkedBlocks").getAsBoolean() : false;
+		newBlockRendering = jsonObject.has("newBlockRendering") ? jsonObject.get("newBlockRendering").getAsBoolean() : false;
 		
 		saveConfig();
 	}
@@ -76,6 +78,7 @@ public class CSBConfig implements InitializationListener {
 		object.addProperty("breakAnimation", breakAnimation.getId());
 		object.addProperty("rainbow", rainbow);
 		object.addProperty("adjustBoundingBoxByLinkedBlocks", adjustBoundingBoxByLinkedBlocks);
+		object.addProperty("newBlockRendering", newBlockRendering);
 		if (configFile.exists())
 			configFile.delete();
 		PrintWriter writer = new PrintWriter(configFile);
