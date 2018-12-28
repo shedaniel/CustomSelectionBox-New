@@ -3,7 +3,8 @@
   "package": "me.shedaniel.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinRenderer"
+    "MixinWorldRenderer",
+    "MixinSettingsGui"
   ],
   "injectors": {
     "defaultRequire": 1

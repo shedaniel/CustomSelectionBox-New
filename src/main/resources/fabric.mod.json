@@ -1,11 +1,14 @@
 {
   "id": "csb",
   "name": "Custom Selection Box Fabric",
-  "version": "2.1.4",
+  "version": "3.0.0-18w50a",
   "side": "client",
   "initializer": "me.shedaniel.CSBConfig",
+  "refmap": "",
   "mixins": {
-    "client": "csb.client.json",
-    "common": "csb.common.json"
-  }
+    "client": "csb.client.json"
+  },
+  "authors": [
+    "Danielshe (https://shedaniel.me)"
+  ]
 }
