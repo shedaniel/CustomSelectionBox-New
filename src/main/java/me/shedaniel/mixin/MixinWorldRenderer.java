@@ -81,7 +81,7 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
                 
                 //Draw Fillin
                 final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ?
-                        alpha * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : breakProgress;
+                        getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : breakProgress;
                 drawNewBlinkingBlock(shape, blockPos.getX() - d0, blockPos.getY() - d1, blockPos.getZ() - d2, red, green, blue, blinkingAlpha);
                 
                 //Draw Outside Shape
@@ -150,8 +150,8 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
                 Block block = blockState.getBlock();
                 Direction direction = blockState.get(PistonExtensionBlock.FACING).getOpposite();
                 BlockState otherState = world.getBlockState(blockPos.offset(direction));
-                if (direction.getOpposite().equals(otherState.get(FacingBlock.field_10927)) && otherState.get(PistonBlock.field_12191) && (otherState.getBlock() == (blockState.get(PistonExtensionBlock.TYPE).equals(PistonType.NORMAL) ? Blocks.PISTON : Blocks.STICKY_PISTON)))
-                    return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
+                if (direction.getOpposite().equals(otherState.get(FacingBlock.field_10927)) && otherState.get(PistonBlock.field_12191) && (otherState.getBlock().equals(blockState.get(PistonExtensionBlock.TYPE).equals(PistonType.NORMAL) ? Blocks.PISTON : Blocks.STICKY_PISTON)))
+                    return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos.offset(direction)).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
             }
         } catch (Exception e) {
         

@@ -31,7 +31,6 @@ public class CSBConfig implements ModInitializer {
     public static float thickness;
     public static float blinkAlpha;
     public static float blinkSpeed;
-    public static boolean diffButtonLoc;
     public static boolean disableDepthBuffer;
     public static boolean adjustBoundingBoxByLinkedBlocks;
     public static BreakAnimationType breakAnimation;
@@ -50,9 +49,8 @@ public class CSBConfig implements ModInitializer {
         blue = jsonObject.has("colourBlue") ? jsonObject.get("colourBlue").getAsInt() / 255.0F : 0F;
         alpha = jsonObject.has("alpha") ? jsonObject.get("alpha").getAsInt() / 255.0F : 1F;
         thickness = jsonObject.has("thickness") ? jsonObject.get("thickness").getAsInt() : 4F;
-        blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.get("blinkSpeed").getAsInt() / 100.0F : 0.3F;
-        blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 100.0F / 255.0F;
-        diffButtonLoc = jsonObject.has("diffButtonLoc") ? jsonObject.get("diffButtonLoc").getAsBoolean() : false;
+        blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.get("blinkSpeed").getAsInt() / 100.0F : 0.2F;
+        blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 0.390625F;
         disableDepthBuffer = jsonObject.has("disableDepthBuffer") ? jsonObject.get("disableDepthBuffer").getAsBoolean() : false;
         breakAnimation = jsonObject.has("breakAnimation") ? BreakAnimationType.getById(jsonObject.get("breakAnimation").getAsInt())
                 : BreakAnimationType.NONE;
@@ -72,7 +70,6 @@ public class CSBConfig implements ModInitializer {
         object.addProperty("thickness", (int) thickness);
         object.addProperty("blinkSpeed", (int) (blinkSpeed * 100));
         object.addProperty("blinkAlpha", (int) (blinkAlpha * 255));
-        object.addProperty("diffButtonLoc", diffButtonLoc);
         object.addProperty("disableDepthBuffer", disableDepthBuffer);
         object.addProperty("breakAnimation", breakAnimation.getId());
         object.addProperty("rainbow", rainbow);
@@ -109,6 +106,7 @@ public class CSBConfig implements ModInitializer {
         disableDepthBuffer = false;
         setBreakAnimation(BreakAnimationType.NONE);
         setIsRainbow(false);
+        setAdjustBoundingBoxByLinkedBlocks(false);
         saveConfig();
     }
     

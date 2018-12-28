@@ -24,7 +24,7 @@ public class CSBSettingsGui extends Gui {
     @Override
     @SuppressWarnings("unchecked")
     protected void onInitialized() {
-        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
         this.buttons.clear();
         // left
         addButton(new CSBSlider(1, 4, this.height / 2 - 62, getRed()));
@@ -72,7 +72,7 @@ public class CSBSettingsGui extends Gui {
             public void onPressed(double double_1, double double_2) {
                 try {
                     saveConfig();
-                    configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+                    configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -85,7 +85,7 @@ public class CSBSettingsGui extends Gui {
                 try {
                     reset(false);
                     saveConfig();
-                    configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+                    configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -98,7 +98,7 @@ public class CSBSettingsGui extends Gui {
                 try {
                     reset(true);
                     saveConfig();
-                    configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+                    configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -121,7 +121,7 @@ public class CSBSettingsGui extends Gui {
     @Override
     public void onClosed() {
         configCache.save();
-        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, diffButtonLoc, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
     }
     
 }
