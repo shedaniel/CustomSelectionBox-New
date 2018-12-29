@@ -96,9 +96,12 @@ public abstract class MixinWorldRenderer implements IWorldEventListener, AutoClo
             shape = adjustShapeByLinkedBlocks(blockState, blockPos, shape);
         
         //Draw Fillin
-        final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ?
-                alpha * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : breakProgress;
-        drawNewBlinkingBlock(shape, blockPos.getX() - d0, blockPos.getY() - d1, blockPos.getZ() - d2, red, green, blue, blinkingAlpha);
+        float blinkingAlpha = (breakAnimation.equals(BreakAnimationType.ALPHA)) ? breakProgress : getBlinkAlpha();
+        if (blinkingAlpha > 0.0F) {
+            if (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA))
+                blinkingAlpha *= (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed()));
+            drawNewBlinkingBlock(shape, blockPos.getX() - d0, blockPos.getY() - d1, blockPos.getZ() - d2, red, green, blue, blinkingAlpha);
+        }
         
         //Draw Outside Shape
         drawNewOutlinedBoundingBox(shape, blockPos.getX() - d0, blockPos.getY() - d1, blockPos.getZ() - d2, red, green, blue, alpha);
