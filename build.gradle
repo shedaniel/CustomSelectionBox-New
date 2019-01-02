@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 group 'me.shedaniel'
-version '2.2.1'
+version '2.2.2'
 archivesBaseName = 'CustomSelectionBox'
 
 sourceCompatibility = 1.8

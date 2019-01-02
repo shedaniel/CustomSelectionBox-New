@@ -6,7 +6,6 @@
     "Danielshe"
   ],
   "listeners": [
-    "me.shedaniel.CSB",
     "me.shedaniel.CSBConfig",
     "me.shedaniel.utils.ConfigListener"
   ],

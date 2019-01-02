@@ -20,13 +20,7 @@ import java.util.Map;
 
 import static me.shedaniel.CSBConfig.*;
 
-public class CSB implements InitializationListener {
-    
-    @Override
-    public void onInitialization() {
-        MixinBootstrap.init();
-        Mixins.addConfiguration("mixins.csb.json");
-    }
+public class CSB {
     
     public static void drawBlinkingBlock(AxisAlignedBB boundingBox, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();

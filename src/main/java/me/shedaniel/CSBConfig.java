@@ -8,6 +8,8 @@ import com.google.gson.stream.JsonWriter;
 import net.minecraft.launchwrapper.Launch;
 import org.apache.commons.io.FileUtils;
 import org.dimdev.riftloader.listener.InitializationListener;
+import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.io.*;
 
@@ -15,6 +17,8 @@ public class CSBConfig implements InitializationListener {
 	
 	@Override
 	public void onInitialization() {
+		MixinBootstrap.init();
+		Mixins.addConfiguration("mixins.csb.json");
 		try {
 			loadConfig();
 		} catch (IOException e) {
