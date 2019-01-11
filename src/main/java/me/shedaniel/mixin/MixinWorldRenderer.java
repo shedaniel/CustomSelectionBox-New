@@ -5,7 +5,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.PistonType;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.PartiallyBrokenBlockEntry;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
@@ -14,14 +13,15 @@ import net.minecraft.resource.ResourceReloadListener;
 import net.minecraft.util.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.WorldListener;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.*;
@@ -33,67 +33,40 @@ import static me.shedaniel.CSBConfig.*;
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable, ResourceReloadListener {
     
-    @Shadow
-    private Map<Integer, PartiallyBrokenBlockEntry> partiallyBrokenBlocks;
-    @Shadow
-    private MinecraftClient client;
+    private BlockPos pos;
+    private float breakProcess;
     @Shadow
     private ClientWorld world;
     
-    @Inject(method = "drawHighlightedBlockOutline", at = @At("HEAD"), cancellable = true)
-    public void drawHighlightedBlockOutline(PlayerEntity player, HitResult trace, int execute, float partialTicks, CallbackInfo ci) {
-        ci.cancel();
-        if (execute == 0 && trace.type == HitResult.Type.BLOCK) {
-            BlockPos blockPos = trace.getBlockPos();
-            BlockState blockState = this.world.getBlockState(blockPos);
-            if (!blockState.isAir() && this.world.getWorldBorder().contains(blockPos)) {
-                float breakProgress = getBreakProgress(partiallyBrokenBlocks, player, trace);
-                
-                GlStateManager.enableBlend();
-                GlStateManager.blendFuncSeparate(GlStateManager.SrcBlendFactor.SRC_ALPHA, GlStateManager.DstBlendFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcBlendFactor.ONE, GlStateManager.DstBlendFactor.ZERO);
-                GlStateManager.lineWidth(getThickness());
-                GlStateManager.disableTexture();
-                GlStateManager.depthMask(false);
-                GlStateManager.matrixMode(5889);
-                GlStateManager.pushMatrix();
-                GlStateManager.scalef(1.0F, 1.0F, 0.999F);
-                double d0 = MathHelper.lerp(partialTicks, player.prevRenderX, player.x);
-                double d1 = MathHelper.lerp(partialTicks, player.prevRenderY, player.y);
-                double d2 = MathHelper.lerp(partialTicks, player.prevRenderZ, player.z);
-                
-                //Colour
-                float red = getRed();
-                float green = getGreen();
-                float blue = getBlue();
-                float alpha = getAlpha();
-                if (rainbow) {
-                    final double millis = System.currentTimeMillis() % 10000L / 10000.0f;
-                    final Color color = Color.getHSBColor((float) millis, 0.8f, 0.8f);
-                    red = color.getRed() / 255.0f;
-                    green = color.getGreen() / 255.0f;
-                    blue = color.getBlue() / 255.0f;
-                }
-                
-                //Get Shape
-                VoxelShape shape = blockState.getBoundingShape(this.world, blockPos);
-                if (adjustBoundingBoxByLinkedBlocks)
-                    shape = adjustShapeByLinkedBlocks(blockState, blockPos, shape);
-                
-                //Draw Fillin
-                final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ?
-                        getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : breakProgress;
-                drawNewBlinkingBlock(shape, blockPos.getX() - d0, blockPos.getY() - d1, blockPos.getZ() - d2, red, green, blue, blinkingAlpha);
-                
-                //Draw Outside Shape
-                drawNewOutlinedBoundingBox(shape, blockPos.getX() - d0, blockPos.getY() - d1, blockPos.getZ() - d2, red, green, blue, alpha);
-                
-                GlStateManager.popMatrix();
-                GlStateManager.matrixMode(5888);
-                GlStateManager.depthMask(true);
-                GlStateManager.enableTexture();
-                GlStateManager.disableBlend();
-            }
+    @Shadow
+    @Final
+    private Map<Integer, PartiallyBrokenBlockEntry> partiallyBrokenBlocks;
+    
+    @Redirect(method = "drawHighlightedBlockOutline",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/render/WorldRenderer;drawShapeOutline(Lnet/minecraft/util/shape/VoxelShape;DDDFFFF)V",
+                    ordinal = 0
+            ))
+    private void drawShapeOutline(VoxelShape shape, double x, double y, double z, float red, float green, float blue, float alpha) {
+        GlStateManager.lineWidth(getThickness());
+        red = getRed();
+        green = getGreen();
+        blue = getBlue();
+        alpha = getAlpha();
+        if (rainbow) {
+            final double millis = System.currentTimeMillis() % 10000L / 10000.0f;
+            final Color color = Color.getHSBColor((float) millis, 0.8f, 0.8f);
+            red = color.getRed() / 255.0f;
+            green = color.getGreen() / 255.0f;
+            blue = color.getBlue() / 255.0f;
         }
+        if (adjustBoundingBoxByLinkedBlocks)
+            shape = adjustShapeByLinkedBlocks(world.getBlockState(pos), pos, shape);
+        final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ?
+                getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : breakProcess;
+        drawNewBlinkingBlock(shape, x, y, z, red, green, blue, blinkingAlpha);
+        drawNewOutlinedBoundingBox(shape, x, y, z, red, green, blue, alpha);
     }
     
     private VoxelShape adjustShapeByLinkedBlocks(BlockState blockState, BlockPos blockPos, VoxelShape shape) {
@@ -102,7 +75,7 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
                 // Chests
                 Block block = blockState.getBlock();
                 Direction facing = ChestBlock.method_9758(blockState);
-                BlockState anotherChestState = this.world.getBlockState(blockPos.offset(facing, 1));
+                BlockState anotherChestState = world.getBlockState(blockPos.offset(facing, 1));
                 if (anotherChestState.getBlock() == block)
                     if (blockPos.offset(facing, 1).offset(ChestBlock.method_9758(anotherChestState)).equals(blockPos))
                         return VoxelShapes.union(shape, anotherChestState.getBoundingShape(world, blockPos).method_1096(facing.getOffsetX(), facing.getOffsetY(), facing.getOffsetZ()));
@@ -134,6 +107,7 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
                         return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
                 }
                 otherState = world.getBlockState(blockPos.offset(direction.getOpposite()));
+                direction = direction.getOpposite();
                 if (blockState.get(BedBlock.field_9967).equals(BedPart.HEAD) && otherState.getBlock() == block) {
                     if (otherState.get(BedBlock.field_9967).equals(BedPart.FOOT))
                         return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
@@ -157,6 +131,12 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
         
         }
         return shape;
+    }
+    
+    @Inject(method = "drawHighlightedBlockOutline", at = @At("HEAD"))
+    public void drawHighlightedBlockOutline(PlayerEntity player, HitResult trace, int execute, float partialTicks, CallbackInfo ci) {
+        this.pos = trace.getBlockPos();
+        this.breakProcess = getBreakProgress(partiallyBrokenBlocks, player, trace);
     }
     
 }

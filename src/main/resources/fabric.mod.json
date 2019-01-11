@@ -1,7 +1,7 @@
 {
   "id": "csb",
   "name": "Custom Selection Box Fabric",
-  "version": "3.0.0-18w50a",
+  "version": "3.1.0",
   "side": "client",
   "initializer": "me.shedaniel.CSBConfig",
   "refmap": "",
