@@ -1,40 +1,28 @@
-import net.fabricmc.loom.LoomGradlePlugin
-
-buildscript {
-	repositories {
-		jcenter()
-		maven {
-			name = 'Fabric'
-			url = 'http://maven.modmuss50.me/'
-		}
-	}
-	dependencies {
-		classpath "net.fabricmc:fabric-loom:0.2.0-SNAPSHOT"
-	}
-}
-
 plugins {
-	id 'java'
-	id 'eclipse'
-	id 'idea'
+	id 'fabric-loom' version '0.2.0-SNAPSHOT'
 }
-
-apply plugin: LoomGradlePlugin
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "CustomSelectionBox"
-version = "3.1.0-18w50a"
+version = "3.1.1"
 
 minecraft {
-	refmapName = 'mixins.csb.refmap.json'
+}
+
+
+processResources {
+	filesMatching('fabric.mod.json') {
+		expand 'version': project.version
+	}
+	inputs.property "version", project.version
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:18w50a"
-	mappings "net.fabricmc:yarn:18w50a.73"
-	modCompile "net.fabricmc:fabric-loader:0.3.0.77"
+	minecraft "com.mojang:minecraft:19w03c"
+	mappings "net.fabricmc:yarn:19w03c.6"
+	modCompile "net.fabricmc:fabric-loader:0.3.3.101"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	//modCompile "net.fabricmc:fabric:0.1.1.47"

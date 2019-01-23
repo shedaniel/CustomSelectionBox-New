@@ -8,8 +8,9 @@ import net.minecraft.block.enums.PistonType;
 import net.minecraft.client.render.PartiallyBrokenBlockEntry;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.resource.ResourceReloadListener;
+import net.minecraft.util.BlockHitResult;
 import net.minecraft.util.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -33,8 +34,9 @@ import static me.shedaniel.CSBConfig.*;
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable, ResourceReloadListener {
     
-    private BlockPos pos;
-    private float breakProcess;
+    private BlockPos csb_pos;
+    private float csb_breakProcess;
+    
     @Shadow
     private ClientWorld world;
     
@@ -42,12 +44,7 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
     @Final
     private Map<Integer, PartiallyBrokenBlockEntry> partiallyBrokenBlocks;
     
-    @Redirect(method = "drawHighlightedBlockOutline",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/render/WorldRenderer;drawShapeOutline(Lnet/minecraft/util/shape/VoxelShape;DDDFFFF)V",
-                    ordinal = 0
-            ))
+    @Redirect(method = "drawHighlightedBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;drawShapeOutline(Lnet/minecraft/util/shape/VoxelShape;DDDFFFF)V", ordinal = 0))
     private void drawShapeOutline(VoxelShape shape, double x, double y, double z, float red, float green, float blue, float alpha) {
         GlStateManager.lineWidth(getThickness());
         red = getRed();
@@ -62,14 +59,13 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
             blue = color.getBlue() / 255.0f;
         }
         if (adjustBoundingBoxByLinkedBlocks)
-            shape = adjustShapeByLinkedBlocks(world.getBlockState(pos), pos, shape);
-        final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ?
-                getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : breakProcess;
+            shape = csb_adjustShapeByLinkedBlocks(world.getBlockState(csb_pos), csb_pos, shape);
+        final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ? getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : csb_breakProcess;
         drawNewBlinkingBlock(shape, x, y, z, red, green, blue, blinkingAlpha);
         drawNewOutlinedBoundingBox(shape, x, y, z, red, green, blue, alpha);
     }
     
-    private VoxelShape adjustShapeByLinkedBlocks(BlockState blockState, BlockPos blockPos, VoxelShape shape) {
+    private VoxelShape csb_adjustShapeByLinkedBlocks(BlockState blockState, BlockPos blockPos, VoxelShape shape) {
         try {
             if (blockState.getBlock() instanceof ChestBlock) {
                 // Chests
@@ -78,65 +74,62 @@ public abstract class MixinWorldRenderer implements WorldListener, AutoCloseable
                 BlockState anotherChestState = world.getBlockState(blockPos.offset(facing, 1));
                 if (anotherChestState.getBlock() == block)
                     if (blockPos.offset(facing, 1).offset(ChestBlock.method_9758(anotherChestState)).equals(blockPos))
-                        return VoxelShapes.union(shape, anotherChestState.getBoundingShape(world, blockPos).method_1096(facing.getOffsetX(), facing.getOffsetY(), facing.getOffsetZ()));
+                        return VoxelShapes.union(shape, anotherChestState.getOutlineShape(world, blockPos).method_1096(facing.getOffsetX(), facing.getOffsetY(), facing.getOffsetZ()));
             } else if (blockState.getBlock() instanceof DoorBlock) {
                 // Doors
                 Block block = blockState.getBlock();
-                if (blockState.get(DoorBlock.field_10946).equals(BlockHalf.LOWER) && world.getBlockState(blockPos.up(1)).getBlock() == block) {
+                if (blockState.get(DoorBlock.HALF).equals(BlockHalf.BOTTOM) && world.getBlockState(blockPos.up(1)).getBlock() == block) {
                     BlockState otherState = world.getBlockState(blockPos.up(1));
-                    if (otherState.get(DoorBlock.field_10940).equals(blockState.get(DoorBlock.field_10940)) &&
-                            otherState.get(DoorBlock.field_10938).equals(blockState.get(DoorBlock.field_10938)) &&
-                            otherState.get(DoorBlock.field_10941).equals(blockState.get(DoorBlock.field_10941))) {
-                        return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(0, 1, 0));
+                    if (otherState.get(DoorBlock.POWERED).equals(blockState.get(DoorBlock.POWERED)) && otherState.get(DoorBlock.FACING).equals(blockState.get(DoorBlock.FACING)) && otherState.get(DoorBlock.HINGE).equals(blockState.get(DoorBlock.HINGE))) {
+                        return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).method_1096(0, 1, 0));
                     }
                 }
-                if (blockState.get(DoorBlock.field_10946).equals(BlockHalf.UPPER) && world.getBlockState(blockPos.down(1)).getBlock() == block) {
+                if (blockState.get(DoorBlock.HALF).equals(BlockHalf.TOP) && world.getBlockState(blockPos.down(1)).getBlock() == block) {
                     BlockState otherState = world.getBlockState(blockPos.down(1));
-                    if (otherState.get(DoorBlock.field_10940).equals(blockState.get(DoorBlock.field_10940)) &&
-                            otherState.get(DoorBlock.field_10938).equals(blockState.get(DoorBlock.field_10938)) &&
-                            otherState.get(DoorBlock.field_10941).equals(blockState.get(DoorBlock.field_10941)))
-                        return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(0, -1, 0));
+                    if (otherState.get(DoorBlock.POWERED).equals(blockState.get(DoorBlock.POWERED)) && otherState.get(DoorBlock.FACING).equals(blockState.get(DoorBlock.FACING)) && otherState.get(DoorBlock.HINGE).equals(blockState.get(DoorBlock.HINGE)))
+                        return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).method_1096(0, -1, 0));
                 }
             } else if (blockState.getBlock() instanceof BedBlock) {
                 // Beds
                 Block block = blockState.getBlock();
-                Direction direction = blockState.get(HorizontalFacingBlock.field_11177);
+                Direction direction = blockState.get(HorizontalFacingBlock.FACING);
                 BlockState otherState = world.getBlockState(blockPos.offset(direction));
                 if (blockState.get(BedBlock.field_9967).equals(BedPart.FOOT) && otherState.getBlock() == block) {
                     if (otherState.get(BedBlock.field_9967).equals(BedPart.HEAD))
-                        return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
+                        return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
                 }
                 otherState = world.getBlockState(blockPos.offset(direction.getOpposite()));
                 direction = direction.getOpposite();
                 if (blockState.get(BedBlock.field_9967).equals(BedPart.HEAD) && otherState.getBlock() == block) {
                     if (otherState.get(BedBlock.field_9967).equals(BedPart.FOOT))
-                        return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
+                        return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
                 }
             } else if (blockState.getBlock() instanceof PistonBlock && blockState.get(PistonBlock.field_12191)) {
                 // Piston Base
                 Block block = blockState.getBlock();
                 Direction direction = blockState.get(FacingBlock.field_10927);
                 BlockState otherState = world.getBlockState(blockPos.offset(direction));
-                if (otherState.get(PistonExtensionBlock.TYPE).equals(block == Blocks.PISTON ? PistonType.NORMAL : PistonType.STICKY) && direction.equals(otherState.get(FacingBlock.field_10927)))
-                    return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
-            } else if (blockState.getBlock() instanceof PistonExtensionBlock) {
+                if (otherState.get(PistonHeadBlock.field_12224).equals(block == Blocks.PISTON ? PistonType.NORMAL : PistonType.STICKY) && direction.equals(otherState.get(FacingBlock.field_10927)))
+                    return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
+            } else if (blockState.getBlock() instanceof PistonHeadBlock) {
                 // Piston Arm
                 Block block = blockState.getBlock();
-                Direction direction = blockState.get(PistonExtensionBlock.FACING).getOpposite();
-                BlockState otherState = world.getBlockState(blockPos.offset(direction));
-                if (direction.getOpposite().equals(otherState.get(FacingBlock.field_10927)) && otherState.get(PistonBlock.field_12191) && (otherState.getBlock().equals(blockState.get(PistonExtensionBlock.TYPE).equals(PistonType.NORMAL) ? Blocks.PISTON : Blocks.STICKY_PISTON)))
-                    return VoxelShapes.union(shape, otherState.getBoundingShape(world, blockPos.offset(direction)).method_1096(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
+                Direction direction = blockState.get(FacingBlock.field_10927);
+                BlockState otherState = world.getBlockState(blockPos.offset(direction.getOpposite()));
+                if (otherState.getBlock() instanceof PistonBlock && direction == otherState.get(FacingBlock.field_10927) && otherState.get(PistonBlock.field_12191))
+                    return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos.offset(direction.getOpposite())).method_1096(direction.getOpposite().getOffsetX(), direction.getOpposite().getOffsetY(), direction.getOpposite().getOffsetZ()));
             }
         } catch (Exception e) {
-        
         }
         return shape;
     }
     
     @Inject(method = "drawHighlightedBlockOutline", at = @At("HEAD"))
-    public void drawHighlightedBlockOutline(PlayerEntity player, HitResult trace, int execute, float partialTicks, CallbackInfo ci) {
-        this.pos = trace.getBlockPos();
-        this.breakProcess = getBreakProgress(partiallyBrokenBlocks, player, trace);
+    public void drawHighlightedBlockOutline(Entity entity, HitResult trace, int execute, float partialTicks, CallbackInfo ci) {
+        if (trace instanceof BlockHitResult) {
+            this.csb_pos = ((BlockHitResult) trace).getBlockPos();
+            this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, entity, trace);
+        }
     }
     
 }

@@ -14,11 +14,20 @@ import static me.shedaniel.CSBConfig.*;
 
 public class CSBSettingsGui extends Gui {
     
-    Gui parent;
+    private Gui parent;
     private ConfigCache configCache;
     
     public CSBSettingsGui(Gui p) {
         this.parent = p;
+    }
+    
+    @Override
+    public boolean keyPressed(int int_1, int int_2, int int_3) {
+        if (int_1 == 256 && this.doesEscapeKeyClose()) {
+            MinecraftClient.getInstance().openGui(parent);
+            return true;
+        }
+        return super.keyPressed(int_1, int_2, int_3);
     }
     
     @Override
@@ -37,8 +46,7 @@ public class CSBSettingsGui extends Gui {
         addButton(new ButtonWidget(10, this.width - 154, this.height / 2 - 38, 150, 20, "Break Animation: " + breakAnimation.getText()) {
             @Override
             public void onPressed(double double_1, double double_2) {
-                setBreakAnimation(breakAnimation.equals(BreakAnimationType.values()[BreakAnimationType.values().length - 1]) ? BreakAnimationType.NONE :
-                        BreakAnimationType.values()[Arrays.asList(BreakAnimationType.values()).indexOf(breakAnimation) + 1]);
+                setBreakAnimation(breakAnimation.equals(BreakAnimationType.values()[BreakAnimationType.values().length - 1]) ? BreakAnimationType.NONE : BreakAnimationType.values()[Arrays.asList(BreakAnimationType.values()).indexOf(breakAnimation) + 1]);
                 text = "Break Animation: " + breakAnimation.getText();
             }
         });
@@ -107,7 +115,10 @@ public class CSBSettingsGui extends Gui {
         });
     }
     
+    @Override
     public void draw(int par1, int par2, float par3) {
+        if (this.client.world == null)
+            this.drawTextureBackground(0);
         drawGradientRect(0, 0, this.width, 48 - 4, -1072689136, -804253680); // top
         drawGradientRect(0, this.height / 2 - 67, 158, this.height / 2 + 59, -1072689136, -804253680); // left
         drawGradientRect(this.width - 158, this.height / 2 - 67, this.width, this.height / 2 + 59, -1072689136, -804253680); // right
@@ -116,6 +127,11 @@ public class CSBSettingsGui extends Gui {
         drawStringCentered(this.fontRenderer, "Custom Selection Box", this.width / 2, (this.height - (this.height + 4 - 48)) / 2 - 4, 16777215);
         
         super.draw(par1, par2, par3);
+    }
+    
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
     
     @Override
