@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
 
 import static me.shedaniel.CSBConfig.*;
 
@@ -28,17 +27,17 @@ public class CSBSlider extends ButtonWidget {
     protected void drawBackground(MinecraftClient minecraft, int p_mouseDragged_2_, int p_mouseDragged_3_) {
         if (this.visible) {
             if (this.dragging) {
-                this.sliderValue = ((float)(p_mouseDragged_2_ - (this.x + 4)) / (float)(this.width - 8));
+                this.sliderValue = ((float) (p_mouseDragged_2_ - (this.x + 4)) / (float) (this.width - 8));
                 this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F, 1.0F);
             }
-    
+            
             updateValue(this.id);
             this.text = getDisplayString(this.id);
-        
+            
             minecraft.getTextureManager().bindTexture(WIDGET_TEX);
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.drawTexturedRect(this.x + (int)(this.sliderValue * (double)(this.width - 8)), this.y, 0, 66, 4, 20);
-            this.drawTexturedRect(this.x + (int)(this.sliderValue * (double)(this.width - 8)) + 4, this.y, 196, 66, 4, 20);
+            this.drawTexturedRect(this.x + (int) (this.sliderValue * (double) (this.width - 8)), this.y, 0, 66, 4, 20);
+            this.drawTexturedRect(this.x + (int) (this.sliderValue * (double) (this.width - 8)) + 4, this.y, 196, 66, 4, 20);
         }
     }
     

@@ -7,8 +7,8 @@ import net.minecraft.client.render.PartiallyBrokenBlockEntry;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.BlockHitResult;
-import net.minecraft.util.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.shape.VoxelShape;
 import org.lwjgl.opengl.GL11;
 
@@ -100,8 +100,7 @@ public class CSB {
     public static void openSettingsGUI() {
         MinecraftClient client = MinecraftClient.getInstance();
         client.options.write();
-        client.openGui(null);
-        client.openGui(new CSBSettingsGui(MinecraftClient.getInstance().currentGui));
+        client.openScreen(new CSBSettingsGui(MinecraftClient.getInstance().currentScreen));
     }
     
 }

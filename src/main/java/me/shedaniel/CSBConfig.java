@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
-import com.mojang.bridge.launcher.Launcher;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.FabricLoader;
 import org.apache.commons.io.FileUtils;
@@ -52,8 +51,7 @@ public class CSBConfig implements ModInitializer {
         blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.get("blinkSpeed").getAsInt() / 100.0F : 0.2F;
         blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 0.390625F;
         disableDepthBuffer = jsonObject.has("disableDepthBuffer") ? jsonObject.get("disableDepthBuffer").getAsBoolean() : false;
-        breakAnimation = jsonObject.has("breakAnimation") ? BreakAnimationType.getById(jsonObject.get("breakAnimation").getAsInt())
-                : BreakAnimationType.NONE;
+        breakAnimation = jsonObject.has("breakAnimation") ? BreakAnimationType.getById(jsonObject.get("breakAnimation").getAsInt()) : BreakAnimationType.NONE;
         rainbow = jsonObject.has("rainbow") ? jsonObject.get("rainbow").getAsBoolean() : false;
         adjustBoundingBoxByLinkedBlocks = jsonObject.has("adjustBoundingBoxByLinkedBlocks") ? jsonObject.get("adjustBoundingBoxByLinkedBlocks").getAsBoolean() : false;
         
@@ -262,7 +260,7 @@ public class CSBConfig implements ModInitializer {
         }
         
         public static BreakAnimationType getById(int id) {
-            for (BreakAnimationType type : values())
+            for(BreakAnimationType type : values())
                 if (type.getId() == id)
                     return type;
             return null;

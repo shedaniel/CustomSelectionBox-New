@@ -3,7 +3,7 @@ package me.shedaniel.gui;
 import me.shedaniel.CSBConfig;
 import me.shedaniel.utils.ConfigCache;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
 import java.io.FileNotFoundException;
@@ -12,19 +12,19 @@ import java.util.Arrays;
 import static me.shedaniel.CSB.openSettingsGUI;
 import static me.shedaniel.CSBConfig.*;
 
-public class CSBSettingsGui extends Gui {
+public class CSBSettingsGui extends Screen {
     
-    private Gui parent;
+    private Screen parent;
     private ConfigCache configCache;
     
-    public CSBSettingsGui(Gui p) {
+    public CSBSettingsGui(Screen p) {
         this.parent = p;
     }
     
     @Override
     public boolean keyPressed(int int_1, int int_2, int int_3) {
         if (int_1 == 256 && this.doesEscapeKeyClose()) {
-            MinecraftClient.getInstance().openGui(parent);
+            MinecraftClient.getInstance().openScreen(parent);
             return true;
         }
         return super.keyPressed(int_1, int_2, int_3);
@@ -84,7 +84,7 @@ public class CSBSettingsGui extends Gui {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                MinecraftClient.getInstance().openGui(null);
+                MinecraftClient.getInstance().openScreen(null);
             }
         });
         addButton(new ButtonWidget(21, this.width / 2 - 100, this.height - 24, 95, 20, "CSB defaults") {
