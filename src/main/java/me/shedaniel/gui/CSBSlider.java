@@ -8,14 +8,14 @@ import net.minecraft.util.math.MathHelper;
 import static me.shedaniel.CSBConfig.*;
 
 public class CSBSlider extends ButtonWidget {
-    private float sliderValue;
     public boolean dragging;
+    private float sliderValue;
     
     // GuiOptionSlider
     public CSBSlider(int i, int x, int y, float f) {
         super(i, x, y, 150, 20, "");
         this.sliderValue = f;
-        this.text = getDisplayString(i);
+        this.method_2060(getDisplayString(i));
     }
     
     @Override
@@ -32,7 +32,7 @@ public class CSBSlider extends ButtonWidget {
             }
             
             updateValue(this.id);
-            this.text = getDisplayString(this.id);
+            this.method_2060(getDisplayString(this.id));
             
             minecraft.getTextureManager().bindTexture(WIDGET_TEX);
             GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -51,7 +51,7 @@ public class CSBSlider extends ButtonWidget {
         this.sliderValue = ((float) (p_mousePressed_1_ - (this.x + 4)) / (float) (width - 8));
         this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0F, 1.0F);
         
-        this.text = getDisplayString(this.id);
+        this.method_2060(getDisplayString(this.id));
         this.dragging = true;
     }
     

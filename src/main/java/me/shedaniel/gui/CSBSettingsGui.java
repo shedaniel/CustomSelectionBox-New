@@ -47,7 +47,7 @@ public class CSBSettingsGui extends Screen {
             @Override
             public void onPressed(double double_1, double double_2) {
                 setBreakAnimation(breakAnimation.equals(BreakAnimationType.values()[BreakAnimationType.values().length - 1]) ? BreakAnimationType.NONE : BreakAnimationType.values()[Arrays.asList(BreakAnimationType.values()).indexOf(breakAnimation) + 1]);
-                text = "Break Animation: " + breakAnimation.getText();
+                method_2060("Break Animation: " + breakAnimation.getText());
             }
         });
         addButton(new CSBSlider(7, this.width - 154, this.height / 2 - 14, getBlinkAlpha()));
@@ -56,14 +56,14 @@ public class CSBSettingsGui extends Screen {
             @Override
             public void onPressed(double double_1, double double_2) {
                 setIsRainbow(!usingRainbow());
-                text = "Chroma: " + (usingRainbow() ? "ON" : "OFF");
+                method_2060("Chroma: " + (usingRainbow() ? "ON" : "OFF"));
             }
         });
         addButton(new ButtonWidget(6, this.width - 154, this.height / 2 + 34, 150, 20, "Link Blocks: " + (isAdjustBoundingBoxByLinkedBlocks() ? "ON" : "OFF")) {
             @Override
             public void onPressed(double double_1, double double_2) {
                 setAdjustBoundingBoxByLinkedBlocks(!isAdjustBoundingBoxByLinkedBlocks());
-                text = "Link Blocks: " + (isAdjustBoundingBoxByLinkedBlocks() ? "ON" : "OFF");
+                method_2060("Link Blocks: " + (isAdjustBoundingBoxByLinkedBlocks() ? "ON" : "OFF"));
             }
         });
         
@@ -72,7 +72,7 @@ public class CSBSettingsGui extends Screen {
             @Override
             public void onPressed(double double_1, double double_2) {
                 setEnabled(!isEnabled());
-                text = "Enabled: " + (isEnabled() ? "True" : "False");
+                method_2060("Enabled: " + (isEnabled() ? "True" : "False"));
             }
         });
         addButton(new ButtonWidget(20, this.width / 2 + 5, this.height - 48, 95, 20, "Save") {
