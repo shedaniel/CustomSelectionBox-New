@@ -8,12 +8,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("unused")
 @Mixin(SettingsScreen.class)
-public class MixinSettingsScreen extends Screen {
+public abstract class MixinSettingsScreen extends Screen {
     
     @Inject(method = "onInitialized()V", at = @At(value = "RETURN"))
     private void onInitialized(CallbackInfo ci) {
-        addButton(new CSBConfigButton(404, this.width / 2 - 75, this.height / 6 + 24 - 6, 150, 20, "Custom Selection Box"));
+        addButton(new CSBConfigButton(this.screenWidth / 2 - 75, this.screenHeight / 6 + 24 - 6, 150, 20, "Custom Selection Box"));
     }
     
 }

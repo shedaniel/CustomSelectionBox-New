@@ -29,6 +29,7 @@ import java.util.Map;
 import static me.shedaniel.CSB.*;
 import static me.shedaniel.CSBConfig.*;
 
+@SuppressWarnings("unused")
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
     
@@ -80,13 +81,13 @@ public abstract class MixinWorldRenderer {
             } else if (blockState.getBlock() instanceof DoorBlock) {
                 // Doors
                 Block block = blockState.getBlock();
-                if (blockState.get(DoorBlock.HALF).equals(BlockHalf.BOTTOM) && world.getBlockState(blockPos.up(1)).getBlock() == block) {
+                if (world.getBlockState(blockPos.up(1)).getBlock() == block) {
                     BlockState otherState = world.getBlockState(blockPos.up(1));
                     if (otherState.get(DoorBlock.POWERED).equals(blockState.get(DoorBlock.POWERED)) && otherState.get(DoorBlock.FACING).equals(blockState.get(DoorBlock.FACING)) && otherState.get(DoorBlock.HINGE).equals(blockState.get(DoorBlock.HINGE))) {
                         return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).offset(0, 1, 0));
                     }
                 }
-                if (blockState.get(DoorBlock.HALF).equals(BlockHalf.TOP) && world.getBlockState(blockPos.down(1)).getBlock() == block) {
+                if (world.getBlockState(blockPos.down(1)).getBlock() == block) {
                     BlockState otherState = world.getBlockState(blockPos.down(1));
                     if (otherState.get(DoorBlock.POWERED).equals(blockState.get(DoorBlock.POWERED)) && otherState.get(DoorBlock.FACING).equals(blockState.get(DoorBlock.FACING)) && otherState.get(DoorBlock.HINGE).equals(blockState.get(DoorBlock.HINGE)))
                         return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).offset(0, -1, 0));
@@ -127,7 +128,7 @@ public abstract class MixinWorldRenderer {
     }
     
     @Inject(method = "drawHighlightedBlockOutline", at = @At("HEAD"))
-    public void drawHighlightedBlockOutline(Entity entity, HitResult trace, int execute, float delta, CallbackInfo ci) {
+    private void drawHighlightedBlockOutline(Entity entity, HitResult trace, int execute, float delta, CallbackInfo ci) {
         if (trace instanceof BlockHitResult) {
             this.csb_pos = ((BlockHitResult) trace).getBlockPos();
             this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, entity, trace);
