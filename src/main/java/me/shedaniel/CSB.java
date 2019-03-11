@@ -90,9 +90,8 @@ public class CSB {
     public static float getBreakProgress(Map<Integer, PartiallyBrokenBlockEntry> map, Entity entity, HitResult block) {
         for(Map.Entry<Integer, PartiallyBrokenBlockEntry> entry : map.entrySet()) {
             PartiallyBrokenBlockEntry prg = entry.getValue();
-            if (prg.getPos().equals(((BlockHitResult) block).getPos()))
-                if (prg.getStage() >= 0 && prg.getStage() <= 10)
-                    return prg.getStage() / 10f;
+            if (prg.getPos().equals(((BlockHitResult) block).getPos()) && prg.getStage() >= 0 && prg.getStage() <= 10)
+                return prg.getStage() / 10f;
         }
         return 0f;
     }
