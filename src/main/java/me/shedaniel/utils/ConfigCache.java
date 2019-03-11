@@ -4,18 +4,18 @@ import me.shedaniel.CSBConfig;
 
 public class ConfigCache {
     
-    public boolean enabled;
-    public float red;
-    public float green;
-    public float blue;
-    public float alpha;
-    public float thickness;
-    public float blinkAlpha;
-    public float blinkSpeed;
-    public boolean disableDepthBuffer;
-    public CSBConfig.BreakAnimationType breakAnimation;
-    public boolean rainbow;
-    public boolean adjustBoundingBoxByLinkedBlocks;
+    private boolean enabled;
+    private float red;
+    private float green;
+    private float blue;
+    private float alpha;
+    private float thickness;
+    private float blinkAlpha;
+    private float blinkSpeed;
+    private boolean disableDepthBuffer;
+    private CSBConfig.BreakAnimationType breakAnimation;
+    private boolean rainbow;
+    private boolean adjustBoundingBoxByLinkedBlocks;
     
     public ConfigCache(boolean enabled, float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed, boolean disableDepthBuffer, CSBConfig.BreakAnimationType breakAnimation, boolean rainbow, boolean adjustBoundingBoxByLinkedBlocks) {
         this.enabled = enabled;
