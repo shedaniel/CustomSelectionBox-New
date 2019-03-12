@@ -1,13 +1,12 @@
 {
   "id": "csb",
   "name": "Custom Selection Box Rift",
-  "version": "2.2.1",
+  "version": "2.3",
   "authors": [
     "Danielshe"
   ],
   "listeners": [
-    "me.shedaniel.CSBConfig",
-    "me.shedaniel.utils.ConfigListener"
+    "me.shedaniel.CSBConfig"
   ],
   "url": "https://shedaniel.me",
   "description": "Let you customize the selection box / hitbox.",

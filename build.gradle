@@ -6,7 +6,7 @@ buildscript {
         maven { url 'http://files.minecraftforge.net/maven' }
     }
     dependencies {
-        classpath 'com.github.Chocohead:ForgeGradle:moderniser-SNAPSHOT'
+        classpath 'com.github.Chocohead:ForgeGradle:jitpack-SNAPSHOT'
         classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
     }
 }
@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
 
 group 'me.shedaniel'
-version '2.2.2'
+version '2.3'
 archivesBaseName = 'CustomSelectionBox'
 
 sourceCompatibility = 1.8
@@ -31,9 +31,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Chocohead:Rift:f76cf44d887d290782590c99770876393c924333:dev'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.github.shedaniel:Rift-ModList:3840eeabf8'
+    implementation 'com.github.Chocohead:Rift:jitpack-SNAPSHOT:dev'
+    implementation 'com.github.shedaniel:Rift-ModList:43d459d86f0cdbc0797c38dfc0059bda9d0db059'
 }
 
 mixin {

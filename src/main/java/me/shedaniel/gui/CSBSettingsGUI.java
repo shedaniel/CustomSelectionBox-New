@@ -106,6 +106,7 @@ public class CSBSettingsGUI extends GuiScreen {
 	}
 	
 	public void render(int par1, int par2, float par3) {
+		drawDefaultBackground();
 		drawGradientRect(0, 0, this.width, 48 - 4, -1072689136, -804253680); // top
 		drawGradientRect(0, this.height / 2 - 67, 158, this.height / 2 + 59, -1072689136, -804253680); // left
 		drawGradientRect(this.width - 158, this.height / 2 - 67, this.width, this.height / 2 + 59, -1072689136, -804253680); // right
