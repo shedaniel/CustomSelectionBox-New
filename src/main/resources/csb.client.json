@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "me.shedaniel.mixin",
+  "package": "me.shedaniel.csb.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinWorldRenderer",

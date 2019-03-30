@@ -1,6 +1,6 @@
-package me.shedaniel;
+package me.shedaniel.csb;
 
-import me.shedaniel.gui.CSBSettingsGui;
+import me.shedaniel.csb.gui.CSBSettingsGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.PartiallyBrokenBlockEntry;
@@ -20,9 +20,9 @@ public class CSB {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBufferBuilder();
         bufferbuilder.begin(1, VertexFormats.POSITION_COLOR);
-        voxelShapeIn.method_1104((p_195468_11_, p_195468_13_, p_195468_15_, p_195468_17_, p_195468_19_, p_195468_21_) -> {
-            bufferbuilder.vertex(p_195468_11_ + xIn, p_195468_13_ + yIn, p_195468_15_ + zIn).color(red, green, blue, alpha).next();
-            bufferbuilder.vertex(p_195468_17_ + xIn, p_195468_19_ + yIn, p_195468_21_ + zIn).color(red, green, blue, alpha).next();
+        voxelShapeIn.forEachEdge((x1, y1, z1, x2, y2, z2) -> {
+            bufferbuilder.vertex(x1 + xIn, y1 + yIn, z1 + zIn).color(red, green, blue, alpha).next();
+            bufferbuilder.vertex(x2 + xIn, y2 + yIn, z2 + zIn).color(red, green, blue, alpha).next();
         });
         tessellator.draw();
     }
@@ -30,7 +30,7 @@ public class CSB {
     public static void drawNewBlinkingBlock(VoxelShape voxelShapeIn, double xIn, double yIn, double zIn, float red, float green, float blue, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBufferBuilder();
-        voxelShapeIn.method_1089((x1, y1, z1, x2, y2, z2) -> {
+        voxelShapeIn.forEachBox((x1, y1, z1, x2, y2, z2) -> {
             //Up
             bufferbuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
             bufferbuilder.vertex(x1 + xIn, y1 + yIn, z1 + zIn).color(red, green, blue, alpha).next();

@@ -1,14 +1,13 @@
-package me.shedaniel.mixin;
+package me.shedaniel.csb.mixin;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
-import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.PistonType;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.PartiallyBrokenBlockEntry;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -26,8 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.awt.*;
 import java.util.Map;
 
-import static me.shedaniel.CSB.*;
-import static me.shedaniel.CSBConfig.*;
+import static me.shedaniel.csb.CSB.*;
+import static me.shedaniel.csb.CSBConfig.*;
 
 @SuppressWarnings("unused")
 @Mixin(WorldRenderer.class)
@@ -107,19 +106,19 @@ public abstract class MixinWorldRenderer {
                     if (otherState.get(BedBlock.PART).equals(BedPart.FOOT))
                         return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).offset(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
                 }
-            } else if (blockState.getBlock() instanceof PistonBlock && blockState.get(PistonBlock.field_12191)) {
+            } else if (blockState.getBlock() instanceof PistonBlock && blockState.get(PistonBlock.EXTENDED)) {
                 // Piston Base
                 Block block = blockState.getBlock();
                 Direction direction = blockState.get(FacingBlock.FACING);
                 BlockState otherState = world.getBlockState(blockPos.offset(direction));
-                if (otherState.get(PistonHeadBlock.field_12224).equals(block == Blocks.PISTON ? PistonType.NORMAL : PistonType.STICKY) && direction.equals(otherState.get(FacingBlock.FACING)))
+                if (otherState.get(PistonHeadBlock.TYPE).equals(block == Blocks.PISTON ? PistonType.NORMAL : PistonType.STICKY) && direction.equals(otherState.get(FacingBlock.FACING)))
                     return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).offset(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
             } else if (blockState.getBlock() instanceof PistonHeadBlock) {
                 // Piston Arm
                 Block block = blockState.getBlock();
                 Direction direction = blockState.get(FacingBlock.FACING);
                 BlockState otherState = world.getBlockState(blockPos.offset(direction.getOpposite()));
-                if (otherState.getBlock() instanceof PistonBlock && direction == otherState.get(FacingBlock.FACING) && otherState.get(PistonBlock.field_12191))
+                if (otherState.getBlock() instanceof PistonBlock && direction == otherState.get(FacingBlock.FACING) && otherState.get(PistonBlock.EXTENDED))
                     return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos.offset(direction.getOpposite())).offset(direction.getOpposite().getOffsetX(), direction.getOpposite().getOffsetY(), direction.getOpposite().getOffsetZ()));
             }
         } catch (Exception e) {
@@ -128,10 +127,10 @@ public abstract class MixinWorldRenderer {
     }
     
     @Inject(method = "drawHighlightedBlockOutline", at = @At("HEAD"))
-    private void drawHighlightedBlockOutline(Entity entity, HitResult trace, int execute, float delta, CallbackInfo ci) {
-        if (trace instanceof BlockHitResult) {
-            this.csb_pos = ((BlockHitResult) trace).getBlockPos();
-            this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, entity, trace);
+    private void drawHighlightedBlockOutline(Camera camera, HitResult hitResult_1, int int_1, CallbackInfo ci) {
+        if (hitResult_1 instanceof BlockHitResult) {
+            this.csb_pos = ((BlockHitResult) hitResult_1).getBlockPos();
+            this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, camera.getFocusedEntity(), hitResult_1);
         }
     }
     

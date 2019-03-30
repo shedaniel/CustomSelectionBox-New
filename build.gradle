@@ -6,10 +6,11 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "CustomSelectionBox"
-version = "3.1.4"
+version = "3.1.6"
 
 minecraft {
 }
+
 
 processResources {
 	filesMatching('fabric.mod.json') {
@@ -19,7 +20,7 @@ processResources {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:19w09a"
-	mappings "net.fabricmc:yarn:19w09a.2"
+	minecraft "com.mojang:minecraft:19w13b"
+	mappings "net.fabricmc:yarn:19w13b.1"
 	modCompile "net.fabricmc:fabric-loader:0.3.7.109"
 }

@@ -1,6 +1,6 @@
-package me.shedaniel.utils;
+package me.shedaniel.csb.utils;
 
-import me.shedaniel.CSBConfig;
+import me.shedaniel.csb.CSBConfig;
 
 public class ConfigCache {
     

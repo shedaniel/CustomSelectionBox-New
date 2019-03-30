@@ -3,7 +3,7 @@
   "name": "Custom Selection Box Fabric",
   "version": "${version}",
   "side": "client",
-  "initializer": "me.shedaniel.CSBConfig",
+  "initializer": "me.shedaniel.csb.CSBConfig",
   "refmap": "",
   "mixins": {
     "client": "csb.client.json"
