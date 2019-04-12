@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SettingsScreen.class)
 public abstract class MixinSettingsScreen extends Screen {
     
-    protected MixinSettingsScreen(TextComponent textComponent_1) {
-        super(textComponent_1);
+    protected MixinSettingsScreen(TextComponent title) {
+        super(title);
     }
     
     @Inject(method = "init()V", at = @At(value = "RETURN"))

@@ -51,7 +51,7 @@ public class CSBSlider extends SliderWidget {
         }
     }
     
-    public float getValue() {
+    private float getValue() {
         return (float) value;
     }
     
