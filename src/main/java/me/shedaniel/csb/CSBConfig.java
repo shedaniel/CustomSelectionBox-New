@@ -238,7 +238,7 @@ public class CSBConfig implements ClientModInitializer {
             try {
                 Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
                 Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
-                method.invoke(null, "csb", (Runnable) () -> CSB.openSettingsGUI());
+                method.invoke(null, "csb", (Runnable) CSB::openSettingsGUI);
             } catch (Exception e) {
                 System.err.println("[REI] Failed to add config override for ModMenu!");
                 e.printStackTrace(System.err);

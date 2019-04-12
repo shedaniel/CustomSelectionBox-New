@@ -72,7 +72,7 @@ public class CSBSettingsGui extends Screen {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            minecraft.openScreen(null);
+            minecraft.openScreen(parent);
         }));
         addButton(new ButtonWidget(this.width / 2 - 100, this.height - 24, 95, 20, "CSB defaults", widget -> {
             try {

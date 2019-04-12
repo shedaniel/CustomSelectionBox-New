@@ -111,7 +111,7 @@ public abstract class MixinWorldRenderer {
                 Block block = blockState.getBlock();
                 Direction direction = blockState.get(FacingBlock.FACING);
                 BlockState otherState = world.getBlockState(blockPos.offset(direction));
-                if (otherState.get(PistonHeadBlock.TYPE).equals(block == Blocks.PISTON ? PistonType.NORMAL : PistonType.STICKY) && direction.equals(otherState.get(FacingBlock.FACING)))
+                if (otherState.get(PistonHeadBlock.TYPE).equals(block == Blocks.PISTON ? PistonType.DEFAULT : PistonType.STICKY) && direction.equals(otherState.get(FacingBlock.FACING)))
                     return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos).offset(direction.getOffsetX(), direction.getOffsetY(), direction.getOffsetZ()));
             } else if (blockState.getBlock() instanceof PistonHeadBlock) {
                 // Piston Arm
@@ -121,8 +121,7 @@ public abstract class MixinWorldRenderer {
                 if (otherState.getBlock() instanceof PistonBlock && direction == otherState.get(FacingBlock.FACING) && otherState.get(PistonBlock.EXTENDED))
                     return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos.offset(direction.getOpposite())).offset(direction.getOpposite().getOffsetX(), direction.getOpposite().getOffsetY(), direction.getOpposite().getOffsetZ()));
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) { }
         return shape;
     }
     
@@ -130,7 +129,7 @@ public abstract class MixinWorldRenderer {
     private void drawHighlightedBlockOutline(Camera camera, HitResult hitResult_1, int int_1, CallbackInfo ci) {
         if (hitResult_1 instanceof BlockHitResult) {
             this.csb_pos = ((BlockHitResult) hitResult_1).getBlockPos();
-            this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, camera.getFocusedEntity(), hitResult_1);
+            this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, hitResult_1);
         }
     }
     
