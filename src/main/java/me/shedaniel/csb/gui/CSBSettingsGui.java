@@ -2,7 +2,6 @@ package me.shedaniel.csb.gui;
 
 import me.shedaniel.csb.CSBConfig;
 import me.shedaniel.csb.utils.ConfigCache;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.StringTextComponent;
@@ -18,16 +17,16 @@ public class CSBSettingsGui extends Screen {
     private Screen parent;
     private ConfigCache configCache;
     
-    public CSBSettingsGui(Screen p) {
-        super(new StringTextComponent(""));
-        this.parent = p;
+    public CSBSettingsGui(Screen parent) {
+        super(new StringTextComponent("Custom Selection Box"));
+        this.parent = parent;
     }
     
     @Override
     public boolean keyPressed(int int_1, int int_2, int int_3) {
         if (int_1 == 256 && this.shouldCloseOnEsc()) {
             onClose();
-            MinecraftClient.getInstance().openScreen(parent);
+            minecraft.openScreen(parent);
             return true;
         }
         return super.keyPressed(int_1, int_2, int_3);
@@ -82,7 +81,7 @@ public class CSBSettingsGui extends Screen {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            openSettingsGUI();
+            openSettingsGUI(minecraft, parent);
         }));
         addButton(new ButtonWidget(this.width / 2 + 5, this.height - 24, 95, 20, "MC defaults", widget -> {
             try {
@@ -92,7 +91,7 @@ public class CSBSettingsGui extends Screen {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            openSettingsGUI();
+            openSettingsGUI(minecraft, parent);
         }));
     }
     
@@ -105,7 +104,7 @@ public class CSBSettingsGui extends Screen {
         fillGradient(this.width - 158, this.height / 2 - 67, this.width, this.height / 2 + 59, -1072689136, -804253680); // right
         fillGradient(0, this.height - 48 - 4, this.width, this.height, -1072689136, -804253680); // bottom
         
-        drawCenteredString(this.font, "Custom Selection Box", this.width / 2, (this.height - (this.height + 4 - 48)) / 2 - 4, 16777215);
+        drawCenteredString(this.font, getTitle().getFormattedText(), this.width / 2, (this.height - (this.height + 4 - 48)) / 2 - 4, 16777215);
         
         super.render(par1, par2, par3);
     }

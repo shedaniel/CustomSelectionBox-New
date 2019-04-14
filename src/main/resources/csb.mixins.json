@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "MixinWorldRenderer",
-    "MixinSettingsScreen"
+    "MixinClientPlayerEntity",
+    "MixinClientPlayNetworkHandler",
+    "MixinChatScreen"
   ],
   "minVersion": "0.7.11",
   "injectors": {

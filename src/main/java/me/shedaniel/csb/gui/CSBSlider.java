@@ -64,9 +64,9 @@ public class CSBSlider extends SliderWidget {
             case 3:
                 return "Blue: " + Math.round(getValue() * 255.0F);
             case 4:
-                return "Alpha: " + Math.round(getValue() * 255.0F);
+                return "Outline Alpha: " + Math.round(getValue() * 255.0F);
             case 5:
-                return "Thickness: " + Math.round(getValue() * 7.0F);
+                return "Outline Thickness: " + Math.round(getValue() * 7.0F);
             case 7:
                 return "Blink Alpha: " + Math.round(getValue() * 255.0F);
             case 8:

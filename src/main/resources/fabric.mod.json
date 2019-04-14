@@ -2,18 +2,27 @@
   "schemaVersion": 1,
   "id": "csb",
   "name": "Custom Selection Box Fabric",
+  "description": "Custom Selection Box shows you a clear and concise selection box that you can set to your own preferences. Sometimes it may be very unclear as to what you’re setting your sights on and which item you are trying to highlight to either edit, destroy or even place. Now the box is much clearer and completely editable to fit your needs.",
   "version": "${version}",
-  "side": "client",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "me.shedaniel.csb.CSBConfig"
     ]
   },
-  "initializer": "me.shedaniel.csb.CSBConfig",
+  "contact": {
+    "homepage": "https://minecraft.curseforge.com/projects/custom-selection-box-port",
+    "sources": "https://github.com/shedaniel/CustomSelectionBox-New/tree/1.14",
+    "issues": "https://github.com/shedaniel/CustomSelectionBox-New/issues"
+  },
+  "icon": "icon.png",
   "mixins": [
     "csb.mixins.json"
   ],
   "authors": [
-    "Danielshe (https://shedaniel.me)"
-  ]
+    "Danielshe"
+  ],
+  "custom": {
+    "modmenu:clientsideOnly": true
+  }
 }
