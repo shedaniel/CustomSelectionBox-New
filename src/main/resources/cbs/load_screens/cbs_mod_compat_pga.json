@@ -1,9 +1,0 @@
-{
-	"screens" : [{
-			"COMMENT" : "Custom Selection Box SUPPORT", 
-			"class" : "me.shedaniel.gui.CSBSettingsGUI", 
-			"texture" : "cbs:textures/gui/custom_selection_box.png", 
-			"size" : [504, 255], 
-			"texSize" : [504, 255]
-		}]
-}
