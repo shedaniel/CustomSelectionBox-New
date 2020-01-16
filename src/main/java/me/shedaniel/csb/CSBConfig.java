@@ -38,7 +38,7 @@ public class CSBConfig implements ClientModInitializer {
         green = jsonObject.has("colourGreen") ? jsonObject.get("colourGreen").getAsInt() / 255.0F : 0F;
         blue = jsonObject.has("colourBlue") ? jsonObject.get("colourBlue").getAsInt() / 255.0F : 0F;
         alpha = jsonObject.has("alpha") ? jsonObject.get("alpha").getAsInt() / 255.0F : 1F;
-        thickness = jsonObject.has("thickness") ? jsonObject.get("thickness").getAsInt() : 4F;
+        thickness = jsonObject.has("thickness") ? jsonObject.get("thickness").getAsInt() : 2F;
         blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.get("blinkSpeed").getAsInt() / 100.0F : 0.2F;
         blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 0.390625F;
         disableDepthBuffer = jsonObject.has("disableDepthBuffer") && jsonObject.get("disableDepthBuffer").getAsBoolean();
@@ -87,7 +87,7 @@ public class CSBConfig implements ClientModInitializer {
         setGreen(0.0F);
         setBlue(0.0F);
         setAlpha(mc ? 0.4F : 1.0F);
-        setThickness(mc ? 2.0F : 4.0F);
+        setThickness(mc ? 1.0F : 2.0F);
         setBlinkAlpha(mc ? 0.0F : 0.390625F);
         setBlinkSpeed(0.2F);
         disableDepthBuffer = false;

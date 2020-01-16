@@ -1,71 +1,32 @@
 package me.shedaniel.csb;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
+import me.shedaniel.csb.api.CSBRenderer;
 import me.shedaniel.csb.gui.CSBSettingsGui;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.util.math.Matrix4f;
-import net.minecraft.util.shape.VoxelShape;
 
-import static me.shedaniel.csb.CSBConfig.getThickness;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
-public class CSB {
+public class CSB implements ClientModInitializer {
     
-    public static void drawNewOutlinedBoundingBox(Matrix4f matrix4f, VertexConsumer vertexConsumerD, VoxelShape voxelShapeIn, double xIn, double yIn, double zIn, float red, float green, float blue, float alpha) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexConsumer = tessellator.getBuffer();
-        RenderSystem.pushMatrix();
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
-        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-        RenderSystem.depthMask(false);
-        RenderSystem.color4f(red, green, blue, alpha);
-        RenderSystem.defaultAlphaFunc();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.disableCull();
-        RenderSystem.disableTexture();
-        RenderSystem.lineWidth(getThickness());
-        vertexConsumer.begin(1, VertexFormats.POSITION);
-        voxelShapeIn.forEachEdge((x1, y1, z1, x2, y2, z2) -> edge(vertexConsumer, x1, y1, z1, x2, y2, z2, xIn, yIn, zIn));
-        tessellator.draw();
-        RenderSystem.enableCull();
-        RenderSystem.disableAlphaTest();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        RenderSystem.popMatrix();
+    public static final List<CSBRenderer> RENDERERS = new ArrayList<>();
+    
+    public static void openSettingsGUI(MinecraftClient client, Screen parent) {
+        client.openScreen(new CSBSettingsGui(parent));
     }
     
-    private static void edge(BufferBuilder vertexConsumer, double x1, double y1, double z1, double x2, double y2, double z2, double xIn, double yIn, double zIn) {
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-    }
-    
-    public static void drawNewBlinkingBlock(VoxelShape voxelShapeIn, double xIn, double yIn, double zIn, float red, float green, float blue, float alpha) {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexConsumer = tessellator.getBuffer();
-        RenderSystem.pushMatrix();
-        RenderSystem.enableBlend();
-        RenderSystem.enableDepthTest();
-        RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-        RenderSystem.depthMask(false);
-        RenderSystem.color4f(red, green, blue, alpha);
-        RenderSystem.defaultAlphaFunc();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.disableCull();
-        RenderSystem.disableTexture();
-        voxelShapeIn.forEachBox((x1, y1, z1, x2, y2, z2) -> box(tessellator, vertexConsumer, x1, y1, z1, x2, y2, z2, xIn, yIn, zIn));
-        RenderSystem.enableCull();
-        RenderSystem.disableAlphaTest();
-        RenderSystem.enableAlphaTest();
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        RenderSystem.popMatrix();
+    @Override
+    public void onInitializeClient() {
+        RENDERERS.clear();
+        RENDERERS.addAll(FabricLoader.getInstance().getEntrypoints("csb_renderers", CSBRenderer.class));
+        RENDERERS.sort(Comparator.comparingDouble(CSBRenderer::getPriority));
+        if (RENDERERS.isEmpty()) {
+            throw new IllegalStateException("No default CSB renderers!");
+        }
     }
     
     public static int HSBtoRGB(float hue, float saturation, float brightness) {
@@ -115,70 +76,4 @@ public class CSB {
         
         return -16777216 | r << 16 | g << 8 | b;
     }
-    
-    private static void box(Tessellator tessellator, BufferBuilder vertexConsumer, double x1, double y1, double z1, double x2, double y2, double z2, double xIn, double yIn, double zIn) {
-        x1 -= 0.005;
-        y1 -= 0.005;
-        z1 -= 0.005;
-        x2 += 0.005;
-        y2 += 0.005;
-        z2 += 0.005;
-        vertexConsumer.begin(7, VertexFormats.POSITION);
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        tessellator.draw();
-        
-        //Down
-        vertexConsumer.begin(7, VertexFormats.POSITION);
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        tessellator.draw();
-        
-        //North
-        vertexConsumer.begin(7, VertexFormats.POSITION);
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        tessellator.draw();
-        
-        //South
-        vertexConsumer.begin(7, VertexFormats.POSITION);
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        tessellator.draw();
-        
-        //West
-        vertexConsumer.begin(7, VertexFormats.POSITION);
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        tessellator.draw();
-        
-        //East
-        vertexConsumer.begin(7, VertexFormats.POSITION);
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
-        vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
-        tessellator.draw();
-    }
-    
-    public static void openSettingsGUI(MinecraftClient client, Screen parent) {
-        client.openScreen(new CSBSettingsGui(parent));
-    }
-    
 }
