@@ -25,7 +25,6 @@ public class CSBConfig implements ClientModInitializer {
     public static float blinkSpeed;
     public static boolean disableDepthBuffer;
     public static boolean adjustBoundingBoxByLinkedBlocks;
-    public static BreakAnimationType breakAnimation;
     public static boolean rainbow;
     private static File configFile = new File(FabricLoader.getInstance().getGameDirectory(), "config" + File.separator + "CSB" + File.separator + "config.json");
     
@@ -43,7 +42,6 @@ public class CSBConfig implements ClientModInitializer {
         blinkSpeed = jsonObject.has("blinkSpeed") ? jsonObject.get("blinkSpeed").getAsInt() / 100.0F : 0.2F;
         blinkAlpha = jsonObject.has("blinkAlpha") ? jsonObject.get("blinkAlpha").getAsInt() / 255.0F : 0.390625F;
         disableDepthBuffer = jsonObject.has("disableDepthBuffer") && jsonObject.get("disableDepthBuffer").getAsBoolean();
-        breakAnimation = jsonObject.has("breakAnimation") ? BreakAnimationType.getById(jsonObject.get("breakAnimation").getAsInt()) : BreakAnimationType.NONE;
         rainbow = jsonObject.has("rainbow") && jsonObject.get("rainbow").getAsBoolean();
         adjustBoundingBoxByLinkedBlocks = jsonObject.has("adjustBoundingBoxByLinkedBlocks") && jsonObject.get("adjustBoundingBoxByLinkedBlocks").getAsBoolean();
         
@@ -61,7 +59,6 @@ public class CSBConfig implements ClientModInitializer {
         object.addProperty("blinkSpeed", (int) (blinkSpeed * 100));
         object.addProperty("blinkAlpha", (int) (blinkAlpha * 255));
         object.addProperty("disableDepthBuffer", disableDepthBuffer);
-        object.addProperty("breakAnimation", breakAnimation.getId());
         object.addProperty("rainbow", rainbow);
         object.addProperty("adjustBoundingBoxByLinkedBlocks", adjustBoundingBoxByLinkedBlocks);
         if (configFile.exists())
@@ -94,7 +91,6 @@ public class CSBConfig implements ClientModInitializer {
         setBlinkAlpha(mc ? 0.0F : 0.390625F);
         setBlinkSpeed(0.2F);
         disableDepthBuffer = false;
-        setBreakAnimation(BreakAnimationType.NONE);
         setIsRainbow(false);
         setAdjustBoundingBoxByLinkedBlocks(false);
         saveConfig();
@@ -172,10 +168,6 @@ public class CSBConfig implements ClientModInitializer {
         blinkSpeed = between(s, 0.0F, 1.0F);
     }
     
-    public static void setBreakAnimation(BreakAnimationType type) {
-        breakAnimation = type;
-    }
-    
     public static void setIsRainbow(boolean b) {
         rainbow = b;
     }
@@ -244,37 +236,6 @@ public class CSBConfig implements ClientModInitializer {
                 System.err.println("[REI] Failed to add config override for ModMenu!");
                 e.printStackTrace(System.err);
             }
-    }
-    
-    public enum BreakAnimationType {
-        NONE(0, "None"), SHRINK(1, "Shrink"), DOWN(2, "Down"), UP(4, "Up"), ALPHA(3, "Alpha");
-        
-        private int id;
-        private String text;
-        
-        BreakAnimationType(int id, String text) {
-            this.id = id;
-            this.text = text;
-        }
-        
-        public static int getLargestAnimationIndex() {
-            return 4;
-        }
-        
-        public static BreakAnimationType getById(int id) {
-            for(BreakAnimationType type : values())
-                if (type.getId() == id)
-                    return type;
-            return null;
-        }
-        
-        public String getText() {
-            return text;
-        }
-        
-        public int getId() {
-            return id;
-        }
     }
     
 }

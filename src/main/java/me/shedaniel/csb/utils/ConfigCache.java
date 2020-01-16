@@ -13,11 +13,10 @@ public class ConfigCache {
     private float blinkAlpha;
     private float blinkSpeed;
     private boolean disableDepthBuffer;
-    private CSBConfig.BreakAnimationType breakAnimation;
     private boolean rainbow;
     private boolean adjustBoundingBoxByLinkedBlocks;
     
-    public ConfigCache(boolean enabled, float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed, boolean disableDepthBuffer, CSBConfig.BreakAnimationType breakAnimation, boolean rainbow, boolean adjustBoundingBoxByLinkedBlocks) {
+    public ConfigCache(boolean enabled, float red, float green, float blue, float alpha, float thickness, float blinkAlpha, float blinkSpeed, boolean disableDepthBuffer, boolean rainbow, boolean adjustBoundingBoxByLinkedBlocks) {
         this.enabled = enabled;
         this.red = red;
         this.green = green;
@@ -27,7 +26,6 @@ public class ConfigCache {
         this.blinkAlpha = blinkAlpha;
         this.blinkSpeed = blinkSpeed;
         this.disableDepthBuffer = disableDepthBuffer;
-        this.breakAnimation = breakAnimation;
         this.rainbow = rainbow;
         this.adjustBoundingBoxByLinkedBlocks = adjustBoundingBoxByLinkedBlocks;
     }
@@ -42,7 +40,6 @@ public class ConfigCache {
         CSBConfig.blinkAlpha = blinkAlpha;
         CSBConfig.blinkSpeed = blinkSpeed;
         CSBConfig.disableDepthBuffer = disableDepthBuffer;
-        CSBConfig.breakAnimation = breakAnimation;
         CSBConfig.rainbow = rainbow;
         CSBConfig.adjustBoundingBoxByLinkedBlocks = adjustBoundingBoxByLinkedBlocks;
     }

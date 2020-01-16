@@ -11,8 +11,8 @@
     ]
   },
   "contact": {
-    "homepage": "https://minecraft.curseforge.com/projects/custom-selection-box-port",
-    "sources": "https://github.com/shedaniel/CustomSelectionBox-New/tree/1.14",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/custom-selection-box-port",
+    "sources": "https://github.com/shedaniel/CustomSelectionBox-New/tree/1.15",
     "issues": "https://github.com/shedaniel/CustomSelectionBox-New/issues"
   },
   "icon": "icon.png",
@@ -20,7 +20,7 @@
     "csb.mixins.json"
   ],
   "authors": [
-    "Danielshe"
+    "shedaniel"
   ],
   "custom": {
     "modmenu:clientsideOnly": true

@@ -1,29 +1,29 @@
 package me.shedaniel.csb.mixin;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.enums.PistonType;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.PartiallyBrokenBlockEntry;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.awt.*;
-import java.util.Map;
 
 import static me.shedaniel.csb.CSB.*;
 import static me.shedaniel.csb.CSBConfig.*;
@@ -32,39 +32,60 @@ import static me.shedaniel.csb.CSBConfig.*;
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
     
-    private BlockPos csb_pos;
-    private float csb_breakProcess;
+    @Unique private boolean render = false;
+    @Unique private float r = 0f;
+    @Unique private float g = 0f;
+    @Unique private float b = 0f;
+    @Unique private float a = 0f;
+    @Unique private float blinkingAlpha = 0f;
+    @Unique private VoxelShape lastShape = null;
+    @Shadow private ClientWorld world;
     
     @Shadow
-    private ClientWorld world;
+    private static void drawShapeOutline(MatrixStack matrixStack, VertexConsumer vertexConsumer, VoxelShape voxelShape, double d, double e, double f, float g, float h, float i, float j) {
+    }
     
-    @Shadow
-    @Final
-    private Map<Integer, PartiallyBrokenBlockEntry> partiallyBrokenBlocks;
+    @Shadow @Final private MinecraftClient client;
     
-    @Redirect(method = "drawHighlightedBlockOutline", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;drawShapeOutline(Lnet/minecraft/util/shape/VoxelShape;DDDFFFF)V", ordinal = 0))
-    private void onDrawShapeOutline(VoxelShape shape, double x, double y, double z, float red, float green, float blue, float alpha) {
+    @Redirect(method = "render", at = @At(value = "INVOKE",
+                                          target = "Lnet/minecraft/client/render/WorldRenderer;drawBlockOutline(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/entity/Entity;DDDLnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V",
+                                          ordinal = 0))
+    private void onDrawShapeOutline(WorldRenderer worldRenderer, MatrixStack matrixStack, VertexConsumer vertexConsumer, Entity entity, double d, double e, double f, BlockPos blockPos, BlockState blockState) {
         if (!isEnabled()) {
-            WorldRenderer.drawShapeOutline(shape, x, y, z, red, green, blue, alpha);
+            drawShapeOutline(matrixStack, vertexConsumer, blockState.getOutlineShape(world, blockPos, EntityContext.of(entity)), blockPos.getX() - d, blockPos.getY() - e, blockPos.getZ() - f, 0.0F, 0.0F, 0.0F, 0.4F);
             return;
         }
-        GlStateManager.lineWidth(getThickness());
-        red = getRed();
-        green = getGreen();
-        blue = getBlue();
-        alpha = getAlpha();
+        r = getRed();
+        g = getGreen();
+        b = getBlue();
+        a = getAlpha();
         if (rainbow) {
             final double millis = System.currentTimeMillis() % 10000L / 10000.0f;
-            final Color color = Color.getHSBColor((float) millis, 0.8f, 0.8f);
-            red = color.getRed() / 255.0f;
-            green = color.getGreen() / 255.0f;
-            blue = color.getBlue() / 255.0f;
+            final int color = HSBtoRGB((float) millis, 0.8f, 0.8f);
+            r = (color >> 16 & 255) / 255.0f;
+            g = (color >> 8 & 255) / 255.0f;
+            b = (color & 255) / 255.0f;
         }
+        VoxelShape shape = blockState.getOutlineShape(world, blockPos, EntityContext.of(entity));
         if (adjustBoundingBoxByLinkedBlocks)
-            shape = csb_adjustShapeByLinkedBlocks(world.getBlockState(csb_pos), csb_pos, shape);
-        final float blinkingAlpha = (getBlinkSpeed() > 0 && !breakAnimation.equals(BreakAnimationType.ALPHA)) ? getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : csb_breakProcess;
-        drawNewBlinkingBlock(shape, x, y, z, red, green, blue, blinkingAlpha);
-        drawNewOutlinedBoundingBox(shape, x, y, z, red, green, blue, alpha);
+            shape = csb_adjustShapeByLinkedBlocks(world.getBlockState(blockPos), blockPos, shape);
+        blinkingAlpha = getBlinkSpeed() > 0 ? getBlinkAlpha() * (float) Math.abs(Math.sin(System.currentTimeMillis() / 100.0D * getBlinkSpeed())) : getBlinkAlpha();
+        lastShape = shape;
+        render = true;
+    }
+    
+    @Inject(method = "render",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWorldBorder(Lnet/minecraft/client/render/Camera;)V",
+                     shift = At.Shift.AFTER))
+    private void renderWorldBorder(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
+        if (render) {
+            BlockHitResult hitResult = (BlockHitResult) client.crosshairTarget;
+            BlockPos blockPos = hitResult.getBlockPos();
+            Vec3d pos = camera.getPos();
+            drawNewOutlinedBoundingBox(null, null, lastShape, blockPos.getX() - pos.getX(), blockPos.getY() - pos.getY(), blockPos.getZ() - pos.getZ(), r, g, b, a);
+            drawNewBlinkingBlock(lastShape, blockPos.getX() - pos.getX(), blockPos.getY() - pos.getY(), blockPos.getZ() - pos.getZ(), r, g, b, blinkingAlpha);
+            render = false;
+        }
     }
     
     private VoxelShape csb_adjustShapeByLinkedBlocks(BlockState blockState, BlockPos blockPos, VoxelShape shape) {
@@ -94,7 +115,7 @@ public abstract class MixinWorldRenderer {
             } else if (blockState.getBlock() instanceof BedBlock) {
                 // Beds
                 Block block = blockState.getBlock();
-                Direction direction = blockState.get(HorizontalFacingBlock.field_11177);
+                Direction direction = blockState.get(HorizontalFacingBlock.FACING);
                 BlockState otherState = world.getBlockState(blockPos.offset(direction));
                 if (blockState.get(BedBlock.PART).equals(BedPart.FOOT) && otherState.getBlock() == block) {
                     if (otherState.get(BedBlock.PART).equals(BedPart.HEAD))
@@ -121,16 +142,9 @@ public abstract class MixinWorldRenderer {
                 if (otherState.getBlock() instanceof PistonBlock && direction == otherState.get(FacingBlock.FACING) && otherState.get(PistonBlock.EXTENDED))
                     return VoxelShapes.union(shape, otherState.getOutlineShape(world, blockPos.offset(direction.getOpposite())).offset(direction.getOpposite().getOffsetX(), direction.getOpposite().getOffsetY(), direction.getOpposite().getOffsetZ()));
             }
-        } catch (Exception ignored) { }
-        return shape;
-    }
-    
-    @Inject(method = "drawHighlightedBlockOutline", at = @At("HEAD"))
-    private void drawHighlightedBlockOutline(Camera camera, HitResult hitResult_1, int int_1, CallbackInfo ci) {
-        if (hitResult_1 instanceof BlockHitResult) {
-            this.csb_pos = ((BlockHitResult) hitResult_1).getBlockPos();
-            this.csb_breakProcess = getBreakProgress(partiallyBrokenBlocks, hitResult_1);
+        } catch (Exception ignored) {
         }
+        return shape;
     }
     
 }

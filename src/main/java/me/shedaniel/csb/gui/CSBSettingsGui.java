@@ -2,12 +2,11 @@ package me.shedaniel.csb.gui;
 
 import me.shedaniel.csb.CSBConfig;
 import me.shedaniel.csb.utils.ConfigCache;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.StringTextComponent;
+import net.minecraft.text.LiteralText;
 
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 
 import static me.shedaniel.csb.CSB.openSettingsGUI;
 import static me.shedaniel.csb.CSBConfig.*;
@@ -18,7 +17,7 @@ public class CSBSettingsGui extends Screen {
     private ConfigCache configCache;
     
     public CSBSettingsGui(Screen parent) {
-        super(new StringTextComponent("Custom Selection Box"));
+        super(new LiteralText("Custom Selection Box"));
         this.parent = parent;
     }
     
@@ -34,7 +33,7 @@ public class CSBSettingsGui extends Screen {
     
     @Override
     protected void init() {
-        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
         this.buttons.clear();
         // left
         addButton(new CSBSlider(1, 4, this.height / 2 - 62, getRed()));
@@ -44,13 +43,9 @@ public class CSBSettingsGui extends Screen {
         addButton(new CSBSlider(5, 4, this.height / 2 + 34, getThickness() / 7.0F));
         
         // right
-        addButton(new ButtonWidget(this.width - 154, this.height / 2 - 38, 150, 20, "Break Animation: " + breakAnimation.getText(), widget -> {
-            setBreakAnimation(breakAnimation.equals(BreakAnimationType.values()[BreakAnimationType.values().length - 1]) ? BreakAnimationType.NONE : BreakAnimationType.values()[Arrays.asList(BreakAnimationType.values()).indexOf(breakAnimation) + 1]);
-            widget.setMessage("Break Animation: " + breakAnimation.getText());
-        }));
         addButton(new CSBSlider(7, this.width - 154, this.height / 2 - 14, getBlinkAlpha()));
         addButton(new CSBSlider(8, this.width - 154, this.height / 2 + 10, getBlinkSpeed()));
-        addButton(new ButtonWidget(this.width - 154, this.height / 2 - 62, 150, 20, "Chroma: " + (usingRainbow() ? "ON" : "OFF"), widget -> {
+        addButton(new ButtonWidget(this.width - 154, this.height / 2 - 38, 150, 20, "Chroma: " + (usingRainbow() ? "ON" : "OFF"), widget -> {
             setIsRainbow(!usingRainbow());
             widget.setMessage("Chroma: " + (usingRainbow() ? "ON" : "OFF"));
         }));
@@ -67,7 +62,7 @@ public class CSBSettingsGui extends Screen {
         addButton(new ButtonWidget(this.width / 2 + 5, this.height - 48, 95, 20, "Save", widget -> {
             try {
                 saveConfig();
-                configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+                configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -77,7 +72,7 @@ public class CSBSettingsGui extends Screen {
             try {
                 reset(false);
                 saveConfig();
-                configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+                configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -87,7 +82,7 @@ public class CSBSettingsGui extends Screen {
             try {
                 reset(true);
                 saveConfig();
-                configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+                configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -101,10 +96,10 @@ public class CSBSettingsGui extends Screen {
             this.renderDirtBackground(0);
         fillGradient(0, 0, this.width, 48 - 4, -1072689136, -804253680); // top
         fillGradient(0, this.height / 2 - 67, 158, this.height / 2 + 59, -1072689136, -804253680); // left
-        fillGradient(this.width - 158, this.height / 2 - 67, this.width, this.height / 2 + 59, -1072689136, -804253680); // right
+        fillGradient(this.width - 158, this.height / 2 - 43, this.width, this.height / 2 + 59, -1072689136, -804253680); // right
         fillGradient(0, this.height - 48 - 4, this.width, this.height, -1072689136, -804253680); // bottom
         
-        drawCenteredString(this.font, getTitle().getFormattedText(), this.width / 2, (this.height - (this.height + 4 - 48)) / 2 - 4, 16777215);
+        drawCenteredString(this.font, getTitle().asFormattedString(), this.width / 2, (this.height - (this.height + 4 - 48)) / 2 - 4, 16777215);
         
         super.render(par1, par2, par3);
     }
@@ -117,7 +112,7 @@ public class CSBSettingsGui extends Screen {
     @Override
     public void onClose() {
         configCache.save();
-        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, breakAnimation, rainbow, adjustBoundingBoxByLinkedBlocks);
+        this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
     }
     
 }
