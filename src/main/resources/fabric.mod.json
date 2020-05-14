@@ -16,7 +16,7 @@
   },
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/custom-selection-box-port",
-    "sources": "https://github.com/shedaniel/CustomSelectionBox-New/tree/1.15",
+    "sources": "https://github.com/shedaniel/CustomSelectionBox-New/tree/fabric-1.16",
     "issues": "https://github.com/shedaniel/CustomSelectionBox-New/issues"
   },
   "icon": "icon.png",

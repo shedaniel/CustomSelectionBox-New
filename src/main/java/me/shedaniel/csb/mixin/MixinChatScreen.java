@@ -1,6 +1,6 @@
 package me.shedaniel.csb.mixin;
 
-import me.shedaniel.csb.gui.CSBSettingsGui;
+import me.shedaniel.csb.gui.CSBSettingsScreen;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -25,7 +25,7 @@ public class MixinChatScreen extends Screen {
             cancellable = true)
     public void keyPressed(int int_1, int int_2, int int_3, CallbackInfoReturnable<Boolean> ci) {
         String[] split = this.chatField.getText().trim().toLowerCase().split(" ");
-        if (split.length > 0 && split[0].contentEquals("/csbconfig") && minecraft.currentScreen instanceof CSBSettingsGui)
+        if (split.length > 0 && split[0].contentEquals("/csbconfig") && client.currentScreen instanceof CSBSettingsScreen)
             ci.setReturnValue(true);
     }
     

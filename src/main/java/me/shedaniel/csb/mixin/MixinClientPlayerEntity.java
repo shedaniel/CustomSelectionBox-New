@@ -1,6 +1,6 @@
 package me.shedaniel.csb.mixin;
 
-import me.shedaniel.csb.gui.CSBSettingsGui;
+import me.shedaniel.csb.gui.CSBSettingsScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -20,7 +20,7 @@ public class MixinClientPlayerEntity {
     public void sendChatMessage(String message, CallbackInfo ci) {
         String[] split = message.toLowerCase().split(" ");
         if (split.length > 0 && split[0].contentEquals("/csbconfig")) {
-            client.openScreen(new CSBSettingsGui(client.currentScreen instanceof ChatScreen ? null : client.currentScreen));
+            client.openScreen(new CSBSettingsScreen(client.currentScreen instanceof ChatScreen ? null : client.currentScreen));
             ci.cancel();
         }
     }

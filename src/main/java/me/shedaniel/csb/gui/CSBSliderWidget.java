@@ -2,23 +2,23 @@ package me.shedaniel.csb.gui;
 
 import me.shedaniel.csb.CSBConfig;
 import net.minecraft.client.gui.widget.SliderWidget;
+import net.minecraft.text.LiteralText;
 
 import static me.shedaniel.csb.CSBConfig.*;
 
-public class CSBSlider extends SliderWidget {
+public class CSBSliderWidget extends SliderWidget {
     
-    private int id;
+    private final int id;
     
-    // GuiOptionSlider
-    CSBSlider(int i, int x, int y, float f) {
-        super(x, y, 150, 20, f);
+    CSBSliderWidget(int i, int x, int y, float f) {
+        super(x, y, 150, 20, LiteralText.EMPTY, f);
         this.id = i;
-        this.setMessage(getDisplayString(i));
+        this.setMessage(new LiteralText(getDisplayString(i)));
     }
     
     @Override
     protected void updateMessage() {
-        setMessage(getDisplayString(id));
+        setMessage(new LiteralText(getDisplayString(id)));
     }
     
     @Override

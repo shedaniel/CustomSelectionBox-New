@@ -1,16 +1,19 @@
 plugins {
-	id 'fabric-loom' version '0.2.6-SNAPSHOT'
+    id 'fabric-loom' version "0.4.13"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "CustomSelectionBox"
-version = "4.1.0"
+version = "5.0.0-unstable"
 
 minecraft {
 }
 
+repositories {
+    maven { url "https://dl.bintray.com/shedaniel/legacy-yarn-updated" }
+}
 
 processResources {
 	filesMatching('fabric.mod.json') {
@@ -20,7 +23,7 @@ processResources {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.15.1"
-	mappings "net.fabricmc:yarn:1.15.1+build.1:v2"
-    modCompile "net.fabricmc:fabric-loader:0.7.4+build.177"
+	minecraft "com.mojang:minecraft:20w20a"
+	mappings "me.shedaniel:legacy-yarn:20w20a+build.1+legacy.20w09a+build.8:v2"
+    modCompile "net.fabricmc:fabric-loader:0.8.2+build.194"
 }
