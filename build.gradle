@@ -6,7 +6,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "CustomSelectionBox"
-version = "5.0.1-unstable"
+version = "5.0.1"
 
 minecraft {
 }
