@@ -1,12 +1,12 @@
 plugins {
-    id 'fabric-loom' version "0.4.13"
+    id 'fabric-loom' version "0.4-SNAPSHOT"
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 archivesBaseName = "CustomSelectionBox"
-version = "5.0.0-unstable"
+version = "5.0.1-unstable"
 
 minecraft {
 }
@@ -23,7 +23,7 @@ processResources {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:20w20a"
-	mappings "me.shedaniel:legacy-yarn:20w20a+build.1+legacy.20w09a+build.8:v2"
-    modCompile "net.fabricmc:fabric-loader:0.8.2+build.194"
+	minecraft "com.mojang:minecraft:1.16.1"
+	mappings "me.shedaniel:legacy-yarn:1.16.1+build.4+legacy.20w09a+build.8:v2"
+    modCompile "net.fabricmc:fabric-loader:0.8.8+build.202"
 }

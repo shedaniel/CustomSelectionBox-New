@@ -7,11 +7,9 @@ import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.lang.reflect.Method;
 
 public class CSBConfig implements ClientModInitializer {
     
@@ -227,15 +225,6 @@ public class CSBConfig implements ClientModInitializer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (FabricLoader.getInstance().isModLoaded("modmenu"))
-            try {
-                Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
-                Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
-                method.invoke(null, "csb", (Runnable) () -> CSB.openSettingsGUI(MinecraftClient.getInstance(), MinecraftClient.getInstance().currentScreen));
-            } catch (Exception e) {
-                System.err.println("[REI] Failed to add config override for ModMenu!");
-                e.printStackTrace(System.err);
-            }
     }
     
 }

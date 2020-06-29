@@ -20,6 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
+import org.lwjgl.opengl.GL11;
 
 public class CSBDefaultRenderer implements CSBRenderer {
     @Override
@@ -29,6 +30,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
     
     @Override
     public ActionResult render(ClientWorld world, Camera camera, BlockHitResult hitResult, float delta) {
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         Vec3d cameraPos = camera.getPos();
@@ -37,6 +39,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
             shape = adjustShapeByLinkedBlocks(world, blockState, blockPos, shape);
         drawOutlinedBoundingBox(shape, blockPos.getX() - cameraPos.getX(), blockPos.getY() - cameraPos.getY(), blockPos.getZ() - cameraPos.getZ(), getOutlineRed(), getOutlineGreen(), getOutlineBlue(), getOutlineAlpha());
         drawBlinkingBlock(shape, blockPos.getX() - cameraPos.getX(), blockPos.getY() - cameraPos.getY(), blockPos.getZ() - cameraPos.getZ(), getInnerRed(), getInnerGreen(), getInnerBlue(), getInnerAlpha());
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
         return ActionResult.SUCCESS;
     }
     
