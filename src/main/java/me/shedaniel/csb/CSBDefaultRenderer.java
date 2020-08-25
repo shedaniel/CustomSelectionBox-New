@@ -57,56 +57,62 @@ public class CSBDefaultRenderer implements CSBRenderer {
         RenderSystem.disableCull();
         RenderSystem.disableTexture();
         RenderSystem.lineWidth(getOutlineThickness());
-        for (Box box : voxelShapeIn.getBoundingBoxes()) {
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-            vertexConsumer.begin(1, VertexFormats.POSITION);
-            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
-            tessellator.draw();
-        }
+        vertexConsumer.begin(1, VertexFormats.POSITION);
+        voxelShapeIn.forEachEdge((k, l, m, n, o, p)  -> {
+            vertexConsumer.vertex( (float)(k + xIn), (float)(l + yIn), (float)(m + zIn)).next();
+            vertexConsumer.vertex( (float)(n + xIn), (float)(o + yIn), (float)(p + zIn)).next();
+        });
+        tessellator.draw();
+//        for (Box box : voxelShapeIn.getBoundingBoxes()) {
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z1 - 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y1 - 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//            vertexConsumer.begin(1, VertexFormats.POSITION);
+//            vertexConsumer.vertex((float) (box.x1 - 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            vertexConsumer.vertex((float) (box.x2 + 0.005 + xIn), (float) (box.y2 + 0.005 + yIn), (float) (box.z2 + 0.005 + zIn)).next();
+//            tessellator.draw();
+//        }
         RenderSystem.enableCull();
         RenderSystem.disableAlphaTest();
         RenderSystem.enableAlphaTest();
@@ -128,7 +134,12 @@ public class CSBDefaultRenderer implements CSBRenderer {
         RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
         RenderSystem.disableTexture();
-        for (Box box : voxelShapeIn.getBoundingBoxes()) {
+        VoxelShape shape = voxelShapeIn.getBoundingBoxes().stream()
+                .map(box -> box.expand(0.005, 0.005, 0.005))
+                .map(VoxelShapes::cuboid)
+                .reduce(VoxelShapes::union)
+                .orElse(VoxelShapes.empty()).simplify();
+        for (Box box : shape.getBoundingBoxes()) {
             box(tessellator, vertexConsumer, box.x1, box.y1, box.z1, box.x2, box.y2, box.z2, xIn, yIn, zIn);
         }
         RenderSystem.enableCull();
@@ -140,12 +151,12 @@ public class CSBDefaultRenderer implements CSBRenderer {
     }
     
     private void box(Tessellator tessellator, BufferBuilder vertexConsumer, double x1, double y1, double z1, double x2, double y2, double z2, double xIn, double yIn, double zIn) {
-        x1 -= 0.005;
-        y1 -= 0.005;
-        z1 -= 0.005;
-        x2 += 0.005;
-        y2 += 0.005;
-        z2 += 0.005;
+//        x1 -= 0.005;
+//        y1 -= 0.005;
+//        z1 -= 0.005;
+//        x2 += 0.005;
+//        y2 += 0.005;
+//        z2 += 0.005;
         vertexConsumer.begin(7, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
