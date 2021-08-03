@@ -16,7 +16,7 @@ public class CSB implements ClientModInitializer {
     public static final List<CSBRenderer> RENDERERS = new ArrayList<>();
     
     public static void openSettingsGUI(MinecraftClient client, Screen parent) {
-        client.openScreen(new CSBSettingsScreen(parent));
+        client.setScreen(new CSBSettingsScreen(parent));
     }
     
     @Override

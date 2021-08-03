@@ -20,7 +20,7 @@ public class MixinClientPlayerEntity {
     public void sendChatMessage(String message, CallbackInfo ci) {
         String[] split = message.toLowerCase().split(" ");
         if (split.length > 0 && split[0].contentEquals("/csbconfig")) {
-            client.openScreen(new CSBSettingsScreen(client.currentScreen instanceof ChatScreen ? null : client.currentScreen));
+            client.setScreen(new CSBSettingsScreen(client.currentScreen instanceof ChatScreen ? null : client.currentScreen));
             ci.cancel();
         }
     }

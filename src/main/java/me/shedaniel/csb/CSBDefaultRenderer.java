@@ -11,7 +11,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.EntityContext;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -34,7 +34,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         Vec3d cameraPos = camera.getPos();
-        VoxelShape shape = blockState.getOutlineShape(world, blockPos, EntityContext.of(camera.getFocusedEntity()));
+        VoxelShape shape = blockState.getOutlineShape(world, blockPos, ShapeContext.of(camera.getFocusedEntity()));
         if (CSBConfig.isAdjustBoundingBoxByLinkedBlocks())
             shape = adjustShapeByLinkedBlocks(world, blockState, blockPos, shape);
         drawOutlinedBoundingBox(shape, blockPos.getX() - cameraPos.getX(), blockPos.getY() - cameraPos.getY(), blockPos.getZ() - cameraPos.getZ(), getOutlineRed(), getOutlineGreen(), getOutlineBlue(), getOutlineAlpha());

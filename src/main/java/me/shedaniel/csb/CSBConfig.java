@@ -24,7 +24,7 @@ public class CSBConfig implements ClientModInitializer {
     public static boolean disableDepthBuffer;
     public static boolean adjustBoundingBoxByLinkedBlocks;
     public static boolean rainbow;
-    private static File configFile = new File(FabricLoader.getInstance().getGameDirectory(), "config" + File.separator + "CSB" + File.separator + "config.json");
+    private static File configFile = new File(FabricLoader.getInstance().getGameDir().toFile(), "config" + File.separator + "CSB" + File.separator + "config.json");
     
     private static void loadConfig() throws IOException {
         configFile.getParentFile().mkdirs();

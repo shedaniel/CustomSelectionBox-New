@@ -26,7 +26,7 @@ public class CSBSettingsScreen extends Screen {
     public boolean keyPressed(int int_1, int int_2, int int_3) {
         if (int_1 == 256 && this.shouldCloseOnEsc()) {
             onClose();
-            client.openScreen(parent);
+            client.setScreen(parent);
             return true;
         }
         return super.keyPressed(int_1, int_2, int_3);
@@ -35,41 +35,41 @@ public class CSBSettingsScreen extends Screen {
     @Override
     protected void init() {
         this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
-        this.buttons.clear();
+        this.clearChildren();
         // left
-        addButton(new CSBSliderWidget(1, 4, this.height / 2 - 62, getRed()));
-        addButton(new CSBSliderWidget(2, 4, this.height / 2 - 38, getGreen()));
-        addButton(new CSBSliderWidget(3, 4, this.height / 2 - 14, getBlue()));
-        addButton(new CSBSliderWidget(4, 4, this.height / 2 + 10, getAlpha()));
-        addButton(new CSBSliderWidget(5, 4, this.height / 2 + 34, getThickness() / 7.0F));
+        addDrawableChild(new CSBSliderWidget(1, 4, this.height / 2 - 62, getRed()));
+        addDrawableChild(new CSBSliderWidget(2, 4, this.height / 2 - 38, getGreen()));
+        addDrawableChild(new CSBSliderWidget(3, 4, this.height / 2 - 14, getBlue()));
+        addDrawableChild(new CSBSliderWidget(4, 4, this.height / 2 + 10, getAlpha()));
+        addDrawableChild(new CSBSliderWidget(5, 4, this.height / 2 + 34, getThickness() / 7.0F));
         
         // right
-        addButton(new CSBSliderWidget(7, this.width - 154, this.height / 2 - 14, getBlinkAlpha()));
-        addButton(new CSBSliderWidget(8, this.width - 154, this.height / 2 + 10, getBlinkSpeed()));
-        addButton(new ButtonWidget(this.width - 154, this.height / 2 - 38, 150, 20, new LiteralText("Chroma: " + (usingRainbow() ? "ON" : "OFF")), widget -> {
+        addDrawableChild(new CSBSliderWidget(7, this.width - 154, this.height / 2 - 14, getBlinkAlpha()));
+        addDrawableChild(new CSBSliderWidget(8, this.width - 154, this.height / 2 + 10, getBlinkSpeed()));
+        addDrawableChild(new ButtonWidget(this.width - 154, this.height / 2 - 38, 150, 20, new LiteralText("Chroma: " + (usingRainbow() ? "ON" : "OFF")), widget -> {
             setIsRainbow(!usingRainbow());
             widget.setMessage(new LiteralText("Chroma: " + (usingRainbow() ? "ON" : "OFF")));
         }));
-        addButton(new ButtonWidget(this.width - 154, this.height / 2 + 34, 150, 20, new LiteralText("Link Blocks: " + (isAdjustBoundingBoxByLinkedBlocks() ? "ON" : "OFF")), widget -> {
+        addDrawableChild(new ButtonWidget(this.width - 154, this.height / 2 + 34, 150, 20, new LiteralText("Link Blocks: " + (isAdjustBoundingBoxByLinkedBlocks() ? "ON" : "OFF")), widget -> {
             setAdjustBoundingBoxByLinkedBlocks(!isAdjustBoundingBoxByLinkedBlocks());
             widget.setMessage(new LiteralText("Link Blocks: " + (isAdjustBoundingBoxByLinkedBlocks() ? "ON" : "OFF")));
         }));
         
         //below
-        addButton(new ButtonWidget(this.width / 2 - 100, this.height - 48, 95, 20, new LiteralText("Enabled: " + (isEnabled() ? "True" : "False")), widget -> {
+        addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 48, 95, 20, new LiteralText("Enabled: " + (isEnabled() ? "True" : "False")), widget -> {
             setEnabled(!isEnabled());
             widget.setMessage(new LiteralText("Enabled: " + (isEnabled() ? "True" : "False")));
         }));
-        addButton(new ButtonWidget(this.width / 2 + 5, this.height - 48, 95, 20, new LiteralText("Save"), widget -> {
+        addDrawableChild(new ButtonWidget(this.width / 2 + 5, this.height - 48, 95, 20, new LiteralText("Save"), widget -> {
             try {
                 saveConfig();
                 configCache = new ConfigCache(CSBConfig.enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            client.openScreen(parent);
+            client.setScreen(parent);
         }));
-        addButton(new ButtonWidget(this.width / 2 - 100, this.height - 24, 95, 20, new LiteralText("CSB defaults"), widget -> {
+        addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 24, 95, 20, new LiteralText("CSB defaults"), widget -> {
             try {
                 reset(false);
                 saveConfig();
@@ -79,7 +79,7 @@ public class CSBSettingsScreen extends Screen {
             }
             openSettingsGUI(client, parent);
         }));
-        addButton(new ButtonWidget(this.width / 2 + 5, this.height - 24, 95, 20, new LiteralText("MC defaults"), widget -> {
+        addDrawableChild(new ButtonWidget(this.width / 2 + 5, this.height - 24, 95, 20, new LiteralText("MC defaults"), widget -> {
             try {
                 reset(true);
                 saveConfig();
