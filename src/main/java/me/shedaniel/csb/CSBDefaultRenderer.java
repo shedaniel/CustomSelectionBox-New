@@ -9,6 +9,7 @@ import net.minecraft.block.enums.PistonType;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.block.ShapeContext;
@@ -46,18 +47,18 @@ public class CSBDefaultRenderer implements CSBRenderer {
     private void drawOutlinedBoundingBox(VoxelShape voxelShapeIn, double xIn, double yIn, double zIn, float red, float green, float blue, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexConsumer = tessellator.getBuffer();
-        RenderSystem.pushMatrix();
+        RenderSystem.getModelViewStack().push();
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         RenderSystem.depthMask(false);
-        RenderSystem.color4f(red, green, blue, alpha);
-        RenderSystem.defaultAlphaFunc();
-        RenderSystem.enableAlphaTest();
+        RenderSystem.setShaderColor(red, green, blue, alpha);
+        // RenderSystem.defaultAlphaFunc();
+        // RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
         RenderSystem.disableTexture();
         RenderSystem.lineWidth(getOutlineThickness());
-        vertexConsumer.begin(1, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.LINES, VertexFormats.POSITION);
         voxelShapeIn.forEachEdge((k, l, m, n, o, p)  -> {
             vertexConsumer.vertex( (float)(k + xIn), (float)(l + yIn), (float)(m + zIn)).next();
             vertexConsumer.vertex( (float)(n + xIn), (float)(o + yIn), (float)(p + zIn)).next();
@@ -114,24 +115,24 @@ public class CSBDefaultRenderer implements CSBRenderer {
 //            tessellator.draw();
 //        }
         RenderSystem.enableCull();
-        RenderSystem.disableAlphaTest();
-        RenderSystem.enableAlphaTest();
+        // RenderSystem.disableAlphaTest();
+        // RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
-        RenderSystem.popMatrix();
+        RenderSystem.getModelViewStack().pop();
     }
     
     private void drawBlinkingBlock(VoxelShape voxelShapeIn, double xIn, double yIn, double zIn, float red, float green, float blue, float alpha) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexConsumer = tessellator.getBuffer();
-        RenderSystem.pushMatrix();
+        RenderSystem.getModelViewStack().push();
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         RenderSystem.depthMask(false);
-        RenderSystem.color4f(red, green, blue, alpha);
-        RenderSystem.defaultAlphaFunc();
-        RenderSystem.enableAlphaTest();
+        RenderSystem.setShaderColor(red, green, blue, alpha);
+        // RenderSystem.defaultAlphaFunc();
+        // RenderSystem.enableAlphaTest();
         RenderSystem.disableCull();
         RenderSystem.disableTexture();
         VoxelShape shape = voxelShapeIn.getBoundingBoxes().stream()
@@ -140,14 +141,14 @@ public class CSBDefaultRenderer implements CSBRenderer {
                 .reduce(VoxelShapes::union)
                 .orElse(VoxelShapes.empty()).simplify();
         for (Box box : shape.getBoundingBoxes()) {
-            box(tessellator, vertexConsumer, box.x1, box.y1, box.z1, box.x2, box.y2, box.z2, xIn, yIn, zIn);
+            box(tessellator, vertexConsumer, box.minX, box.minY, box.minZ, box.maxX, box.maxY, box.maxZ, xIn, yIn, zIn);
         }
         RenderSystem.enableCull();
-        RenderSystem.disableAlphaTest();
-        RenderSystem.enableAlphaTest();
+        // RenderSystem.disableAlphaTest();
+        // RenderSystem.enableAlphaTest();
         RenderSystem.disableBlend();
         RenderSystem.depthMask(true);
-        RenderSystem.popMatrix();
+        RenderSystem.getModelViewStack().pop();
     }
     
     private void box(Tessellator tessellator, BufferBuilder vertexConsumer, double x1, double y1, double z1, double x2, double y2, double z2, double xIn, double yIn, double zIn) {
@@ -157,7 +158,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
 //        x2 += 0.005;
 //        y2 += 0.005;
 //        z2 += 0.005;
-        vertexConsumer.begin(7, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
@@ -166,7 +167,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
         tessellator.draw();
         
         //Down
-        vertexConsumer.begin(7, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
@@ -175,7 +176,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
         tessellator.draw();
         
         //North
-        vertexConsumer.begin(7, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
@@ -184,7 +185,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
         tessellator.draw();
         
         //South
-        vertexConsumer.begin(7, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
@@ -193,7 +194,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
         tessellator.draw();
         
         //West
-        vertexConsumer.begin(7, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y1 + yIn), (float) (z2 + zIn)).next();
         vertexConsumer.vertex((float) (x1 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();
@@ -202,7 +203,7 @@ public class CSBDefaultRenderer implements CSBRenderer {
         tessellator.draw();
         
         //East
-        vertexConsumer.begin(7, VertexFormats.POSITION);
+        vertexConsumer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y1 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z1 + zIn)).next();
         vertexConsumer.vertex((float) (x2 + xIn), (float) (y2 + yIn), (float) (z2 + zIn)).next();

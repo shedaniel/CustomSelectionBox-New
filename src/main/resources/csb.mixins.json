@@ -1,14 +1,14 @@
 {
   "required": true,
   "package": "me.shedaniel.csb.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "client": [
     "MixinWorldRenderer",
     "MixinClientPlayerEntity",
     "MixinClientPlayNetworkHandler",
     "MixinChatScreen"
   ],
-  "minVersion": "0.7.11",
+  "minVersion": "0.8",
   "injectors": {
     "defaultRequire": 1
   }
