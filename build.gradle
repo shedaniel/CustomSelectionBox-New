@@ -22,4 +22,15 @@ dependencies {
 	minecraft "com.mojang:minecraft:1.17.1"
 	mappings "net.fabricmc:yarn:1.17.1+build.32:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.6"
+
+	// Fabric api
+	// Make a collection of all api modules we wish to use
+	Set<String> apiModules = [
+		"fabric-command-api-v1"
+	]
+
+	// Add each module as a dependency
+	apiModules.forEach {
+		include(modImplementation(fabricApi.module(it, "0.37.1+1.17")))
+	}
 }

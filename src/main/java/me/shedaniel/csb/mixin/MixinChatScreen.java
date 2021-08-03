@@ -21,7 +21,7 @@ public class MixinChatScreen extends Screen {
     }
     
     @Inject(method = "keyPressed",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;openScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 1),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;setScreen(Lnet/minecraft/client/gui/screen/Screen;)V", ordinal = 1),
             cancellable = true)
     public void keyPressed(int int_1, int int_2, int int_3, CallbackInfoReturnable<Boolean> ci) {
         String[] split = this.chatField.getText().trim().toLowerCase().split(" ");

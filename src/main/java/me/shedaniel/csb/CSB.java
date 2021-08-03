@@ -4,6 +4,7 @@ import me.shedaniel.csb.api.CSBRenderer;
 import me.shedaniel.csb.gui.CSBSettingsScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
@@ -27,6 +28,10 @@ public class CSB implements ClientModInitializer {
         if (RENDERERS.isEmpty()) {
             throw new IllegalStateException("No default CSB renderers!");
         }
+        ClientCommandManager.DISPATCHER.register(ClientCommandManager.literal("csbconfig").executes(context -> {
+            openSettingsGUI(context.getSource().getClient(), null);
+            return 1;
+        }));
     }
     
     public static int HSBtoRGB(float hue, float saturation, float brightness) {
