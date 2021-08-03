@@ -18,6 +18,12 @@ processResources {
 	inputs.property "version", project.version
 }
 
+repositories {
+    maven {
+		url 'https://maven.terraformersmc.com/releases/'
+	}
+}
+
 dependencies {
 	minecraft "com.mojang:minecraft:1.17.1"
 	mappings "net.fabricmc:yarn:1.17.1+build.32:v2"
@@ -33,4 +39,7 @@ dependencies {
 	apiModules.forEach {
 		include(modImplementation(fabricApi.module(it, "0.37.1+1.17")))
 	}
+
+	// Mod Menu
+	modCompileOnly "com.terraformersmc:modmenu:2.0.4"
 }

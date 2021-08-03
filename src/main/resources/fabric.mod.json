@@ -12,6 +12,9 @@
     ],
     "csb_renderers": [
       "me.shedaniel.csb.CSBDefaultRenderer"
+    ],
+    "modmenu": [
+      "me.shedaniel.csb.CSBModMenuApiImpl"
     ]
   },
   "contact": {
