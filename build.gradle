@@ -6,7 +6,7 @@ sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = "CustomSelectionBox"
-version = "5.0.2"
+version = "5.1.0"
 
 minecraft {
 }
