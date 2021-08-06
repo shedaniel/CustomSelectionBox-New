@@ -10,9 +10,6 @@
       "me.shedaniel.csb.CSB",
       "me.shedaniel.csb.CSBConfig"
     ],
-    "csb_renderers": [
-      "me.shedaniel.csb.CSBDefaultRenderer"
-    ],
     "modmenu": [
       "me.shedaniel.csb.CSBModMenuApiImpl"
     ]
