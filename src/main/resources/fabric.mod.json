@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "csb",
-  "name": "Custom Selection Box Fabric",
+  "name": "Custom Selection Box",
   "description": "Custom Selection Box shows you a clear and concise selection box that you can set to your own preferences. Sometimes it may be very unclear as to what you’re setting your sights on and which item you are trying to highlight to either edit, destroy or even place. Now the box is much clearer and completely editable to fit your needs.",
   "version": "${version}",
   "environment": "client",

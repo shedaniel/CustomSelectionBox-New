@@ -37,11 +37,11 @@ public class CSBSettingsScreen extends Screen {
         this.configCache = new ConfigCache(enabled, red, green, blue, alpha, thickness, blinkAlpha, blinkSpeed, disableDepthBuffer, rainbow, adjustBoundingBoxByLinkedBlocks);
         this.clearChildren();
         // left
-        addDrawableChild(new CSBSliderWidget(1, 4, this.height / 2 - 62, getRed()));
-        addDrawableChild(new CSBSliderWidget(2, 4, this.height / 2 - 38, getGreen()));
-        addDrawableChild(new CSBSliderWidget(3, 4, this.height / 2 - 14, getBlue()));
-        addDrawableChild(new CSBSliderWidget(4, 4, this.height / 2 + 10, getAlpha()));
-        addDrawableChild(new CSBSliderWidget(5, 4, this.height / 2 + 34, getThickness() / 7.0F));
+        addDrawableChild(new CSBSliderWidget(1, 4, this.height / 2 - 38, getRed()));
+        addDrawableChild(new CSBSliderWidget(2, 4, this.height / 2 - 14, getGreen()));
+        addDrawableChild(new CSBSliderWidget(3, 4, this.height / 2 + 10, getBlue()));
+        addDrawableChild(new CSBSliderWidget(4, 4, this.height / 2 + 34, getAlpha()));
+        // addDrawableChild(new CSBSliderWidget(5, 4, this.height / 2 + 34, getThickness() / 7.0F));
         
         // right
         addDrawableChild(new CSBSliderWidget(7, this.width - 154, this.height / 2 - 14, getBlinkAlpha()));
@@ -96,7 +96,7 @@ public class CSBSettingsScreen extends Screen {
         if (this.client.world == null)
             this.renderBackgroundTexture(0);
         fillGradient(matrices, 0, 0, this.width, 48 - 4, -1072689136, -804253680); // top
-        fillGradient(matrices, 0, this.height / 2 - 67, 158, this.height / 2 + 59, -1072689136, -804253680); // left
+        fillGradient(matrices, 0, this.height / 2 - 43, 158, this.height / 2 + 59, -1072689136, -804253680); // left
         fillGradient(matrices, this.width - 158, this.height / 2 - 43, this.width, this.height / 2 + 59, -1072689136, -804253680); // right
         fillGradient(matrices, 0, this.height - 48 - 4, this.width, this.height, -1072689136, -804253680); // bottom
         
