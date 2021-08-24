@@ -26,7 +26,7 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:1.17.1"
-	mappings "net.fabricmc:yarn:1.17.1+build.32:v2"
+    mappings "net.fabricmc:yarn:1.17.1+build.43:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.6"
 
 	// Fabric api
@@ -37,9 +37,9 @@ dependencies {
 
 	// Add each module as a dependency
 	apiModules.forEach {
-		include(modImplementation(fabricApi.module(it, "0.37.1+1.17")))
+		include(modImplementation(fabricApi.module(it, "0.38.2+1.17")))
 	}
 
 	// Mod Menu
-	modCompileOnly "com.terraformersmc:modmenu:2.0.4"
+	modCompileOnly "com.terraformersmc:modmenu:2.0.5"
 }
